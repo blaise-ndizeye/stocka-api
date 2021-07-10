@@ -119,16 +119,6 @@ const typeDefs = gql`
       "Get all long-term products sorted according to LIFO principle"
       clientId: ID!
     ): [LongTermProduct!]!
-    OneShortTermProduct(
-      "Get one short-term product but for development purpose"
-      clientId: ID!
-      productId: ID!
-    ): ShortTermProduct!
-    OneLongTermProduct(
-      "Get one long-term product but for development purpose"
-      clientId: ID!
-      productId: ID!
-    ): LongTermProduct!
     LongTermProductRecords(
       "Get all long-term products records"
       clientId: ID!

@@ -1,0 +1,27 @@
+module.exports = {
+  clientReducer(client) {
+    return {
+      clientId: client._id,
+      username: client.username,
+      email: client.email,
+      phone: client.phone,
+      role: client.role,
+      gender: client.gender,
+      active: client.active,
+      createdAt: JSON.stringify(client.createdAt),
+    }
+  },
+  productReducer(product) {
+    return {
+      client: product.clientId,
+      productId: product._id,
+      name: product.name,
+      buyingPrice: product.buyingPrice,
+      amount: product.amount,
+      pricePerUnit: product.pricePerUnit,
+      description: product.description,
+      dateOfEntry: JSON.stringify(product.dateOfEntry),
+      dateOfExpry: JSON.stringify(product.dateOfExpry),
+    }
+  },
+}

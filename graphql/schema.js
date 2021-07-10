@@ -93,7 +93,7 @@ const typeDefs = gql`
     sellingPrice: Float!
     amount: Float!
     dateOfEntry: String!
-    dateRecorderd: String!
+    dateRecorded: String!
     description: String
   }
 
@@ -129,15 +129,13 @@ const typeDefs = gql`
       clientId: ID!
       productId: ID!
     ): LongTermProduct!
-    LongTermProductsRecords(
+    LongTermProductRecords(
       "Get all long-term products records"
       clientId: ID!
-      productType: String!
     ): [ProductRecord!]!
     ShortTermProductRecords(
       "Get all short-term product records"
       clientId: ID!
-      productType: String!
     ): [ProductRecord!]!
   }
 

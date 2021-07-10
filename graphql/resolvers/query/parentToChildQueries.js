@@ -10,4 +10,7 @@ module.exports = {
   LongTermProduct: {
     client: (parent) => findClient(parent),
   },
+  ProductRecord: {
+    client: (parent) => findClient(parent),
+  },
 }

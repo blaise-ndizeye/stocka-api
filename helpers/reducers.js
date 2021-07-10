@@ -24,4 +24,17 @@ module.exports = {
       dateOfExpry: JSON.stringify(product.dateOfExpry),
     }
   },
+  productRecordReducer(record) {
+    return {
+      client: record.clientId,
+      name: record.name,
+      productType: record.productType,
+      buyingPrice: record.buyingPrice,
+      sellingPrice: record.sellingPrice,
+      amount: record.amount,
+      description: record.description,
+      dateOfEntry: JSON.stringify(record.dateOfEntry),
+      dateRecorded: JSON.stringify(record.dateRecorded),
+    }
+  },
 }

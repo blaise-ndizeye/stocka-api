@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken")
 
 const Client = require("../../models/Client")
 const { TOKEN_SECRET } = require("../../utils/keys")
+const { generateError } = require("../../utils/constants")
 
 module.exports = async (req) => {
   const header = req.header("Authorization")
@@ -28,6 +29,6 @@ module.exports = async (req) => {
       isLoggedIn: true,
     }
   } catch (e) {
-    throw e
+    generateError(e)
   }
 }

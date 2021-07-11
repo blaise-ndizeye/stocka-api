@@ -2,8 +2,14 @@ const LongTermProduct = require("../../../models/LongTermProduct")
 const ProductRecord = require("../../../models/ProductRecords")
 
 const { generateError } = require("../../../utils/constants")
-const { productValidation } = require("../../../helpers/validations")
-const { productReducer } = require("../../../helpers/reducers")
+const {
+  productValidation,
+  productToRecordValidation,
+} = require("../../../helpers/validations")
+const {
+  productReducer,
+  productRecordReducer,
+} = require("../../../helpers/reducers")
 
 module.exports = {
   AddLongTermProduct: async (_, { product, clientId }, { auth }) => {

@@ -1,6 +1,7 @@
 const userMutations = require("./user")
 const shortTermProductMutations = require("./shortTermProduct")
 const longTermProductMutations = require("./longTermProduct")
+const productRecordMutations = require("./productRecord")
 
 module.exports = {
   Mutation: {
@@ -8,5 +9,6 @@ module.exports = {
     ...userMutations,
     ...shortTermProductMutations,
     ...longTermProductMutations,
+    ...productRecordMutations,
   },
 }

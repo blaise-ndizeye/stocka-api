@@ -37,6 +37,14 @@ const typeDefs = gql`
     description: String
   }
 
+  input ProductToRecordCreds {
+    "the input values for the product to be recorded in the stock which means it is moved from stock"
+    name: String!
+    sellingPrice: Float!
+    productType: String!
+    amount: Float!
+  }
+
   type LongTermProduct {
     "the product which last for long time means it have no date-of-expry"
     productId: ID!
@@ -104,6 +112,13 @@ const typeDefs = gql`
     product: ID!
   }
 
+  type DeleteRecordResponse {
+    success: Boolean!
+    message: String!
+    record: ID!
+    productType: String!
+  }
+
   type Query {
     "all query types will require Authorization tike the mutations except the LoginClient query where the client will get the authorization key and set asthe header key as Authorization and value as Bearer token and it last for 3 days"
     LoginClient(
@@ -169,6 +184,17 @@ const typeDefs = gql`
       productId: ID!
       sellingPrice: Float!
     ): DeleteProductResponse!
+    AddProductToRecord(
+      "Add the product to the records which will act as deleting product from stock and the amount recorded must equal or less than the amount in the stock of the product"
+      record: ProductToRecordCreds
+      clientId: ID!
+    ): ProductRecord!
+    DeleteProductRecord(
+      "Delete the record from the stock..... once the record is not needed anymore can be deleted"
+      recordId: ID!
+      productType: String!
+      clientId: ID!
+    ): DeleteRecordResponse!
   }
 `
 

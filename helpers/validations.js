@@ -33,4 +33,14 @@ module.exports = {
     })
     return schema.validate(data)
   },
+
+  productToRecordValidation: (data) => {
+    const schema = Joi.object({
+      name: Joi.string().min(3).max(30).required(),
+      productType: Joi.string().required(),
+      sellingPrice: Joi.number().positive().required(),
+      amount: Joi.number().positive().required(),
+    })
+    return schema.validate(data)
+  },
 }

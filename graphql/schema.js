@@ -120,6 +120,13 @@ const typeDefs = gql`
     productType: String!
   }
 
+  type DeleteSelectedRecordsResponse {
+    success: Boolean!
+    message: String!
+    deletedRecords: [ID!]!
+    missedRecords: [ID!]!
+  }
+
   type Query {
     "all query types will require Authorization tike the mutations except the LoginClient query where the client will get the authorization key and set asthe header key as Authorization and value as Bearer token and it last for 3 days"
     LoginClient(
@@ -195,6 +202,11 @@ const typeDefs = gql`
       recordId: ID!
       clientId: ID!
     ): DeleteRecordResponse!
+    DeleteSelectedRecords(
+      "Delete the selected records while unwanted by the client he/she can select the unwanted records in certain range and delete them using this mutation"
+      records: [ID!]!
+      clientId: ID!
+    ): DeleteSelectedRecordsResponse!
   }
 `
 

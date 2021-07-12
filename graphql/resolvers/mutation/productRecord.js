@@ -73,4 +73,31 @@ module.exports = {
       throw e
     }
   },
+  DeleteSelectedRecords: async (_, { clientId, records }, { auth }) => {
+    try {
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
+
+      let deletedRecords = []
+      let missedRecords = []
+      for (let i in records) {
+        let _id = records[i]
+        const recordExists = await ProductRecord.findOne({ _id })
+        if (!recordExists) {
+          missedRecords.push(_id)
+          continue
+        }
+        await ProductRecord.deleteOne({ _id })
+        deletedRecords.push(_id)
+      }
+      return {
+        success: true,
+        message: "Operation performed successfully",
+        deletedRecords,
+        missedRecords,
+      }
+    } catch (e) {
+      throw e
+    }
+  },
 }

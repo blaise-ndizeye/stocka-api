@@ -10,9 +10,8 @@ const {
 module.exports = {
   ShortTermProducts: async (_, { clientId }, { auth }) => {
     try {
-      const { clientId: client, isLoggedIn } = await auth
-      if (!isLoggedIn || client !== clientId)
-        generateError("Access Denied, not authorized")
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
 
       const products = await ShortTermProduct.find({ clientId }).sort({
         dateOfEntry: -1,
@@ -24,9 +23,8 @@ module.exports = {
   },
   ShortTermProductRecords: async (_, { clientId }, { auth }) => {
     try {
-      const { clientId: client, isLoggedIn } = await auth
-      if (!isLoggedIn || client !== clientId)
-        generateError("Access Denied, not authorized")
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
 
       const records = await ProductRecord.find({
         $and: [{ clientId }, { productType: "Short-term" }],

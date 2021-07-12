@@ -95,6 +95,7 @@ const typeDefs = gql`
   type ProductRecord {
     "the fields to be returned for the product record"
     client: Client!
+    recordId: ID!
     name: String!
     productType: String!
     buyingPrice: Float!
@@ -192,7 +193,6 @@ const typeDefs = gql`
     DeleteProductRecord(
       "Delete the record from the stock..... once the record is not needed anymore can be deleted"
       recordId: ID!
-      productType: String!
       clientId: ID!
     ): DeleteRecordResponse!
   }

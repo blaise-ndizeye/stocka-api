@@ -9,9 +9,8 @@ const { shortTermProduct } = require("../../../helpers/findFunctions")
 module.exports = {
   AddShortTermProduct: async (_, { product, clientId }, { auth }) => {
     try {
-      const { clientId: client, isLoggedIn } = await auth
-      if (!isLoggedIn || client !== clientId)
-        generateError("Access Denied, not authorized")
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
 
       const {
         name,
@@ -57,9 +56,8 @@ module.exports = {
     { auth }
   ) => {
     try {
-      const { clientId: client, isLoggedIn } = await auth
-      if (!isLoggedIn || client !== clientId)
-        generateError("Access Denied, not authorized")
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
 
       const productToUpdate = await ShortTermProduct.findOne({
         $and: [{ _id: productId }, { clientId }],
@@ -115,9 +113,8 @@ module.exports = {
     { auth }
   ) => {
     try {
-      const { clientId: client, isLoggedIn } = await auth
-      if (!isLoggedIn || client !== clientId)
-        generateError("Access Denied, not authorized")
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
 
       if (
         !sellingPrice ||

@@ -2,21 +2,14 @@ const LongTermProduct = require("../../../models/LongTermProduct")
 const ProductRecord = require("../../../models/ProductRecords")
 
 const { generateError } = require("../../../utils/constants")
-const {
-  productValidation,
-  productToRecordValidation,
-} = require("../../../helpers/validations")
-const {
-  productReducer,
-  productRecordReducer,
-} = require("../../../helpers/reducers")
+const { productValidation } = require("../../../helpers/validations")
+const { productReducer } = require("../../../helpers/reducers")
 
 module.exports = {
   AddLongTermProduct: async (_, { product, clientId }, { auth }) => {
     try {
-      const { clientId: client, isLoggedIn } = await auth
-      if (!isLoggedIn || client !== clientId)
-        generateError("Access Denied, not authorized")
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
 
       const { error } = productValidation(product)
       if (error) generateError(error.details[0].message)
@@ -42,9 +35,8 @@ module.exports = {
     { auth }
   ) => {
     try {
-      const { clientId: client, isLoggedIn } = await auth
-      if (!isLoggedIn || client !== clientId)
-        generateError("Access Denied, not authorized")
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
 
       const productToUpdate = await LongTermProduct.findOne({
         $and: [{ clientId }, { _id: productId }],
@@ -90,9 +82,8 @@ module.exports = {
     { auth }
   ) => {
     try {
-      const { clientId: client, isLoggedIn } = await auth
-      if (!isLoggedIn || client !== clientId)
-        generateError("Access Denied, not authorized")
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
 
       if (
         !sellingPrice ||

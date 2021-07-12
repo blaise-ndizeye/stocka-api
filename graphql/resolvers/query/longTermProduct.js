@@ -10,9 +10,8 @@ const {
 module.exports = {
   LongTermProducts: async (_, { clientId }, { auth }) => {
     try {
-      const { clientId: client, isLoggedIn } = await auth
-      if (!isLoggedIn || client !== clientId)
-        generateError("Access Denied, not authorized")
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
       const products = await LongTermProduct.find({ clientId }).sort({
         dateOfEntry: -1,
       })
@@ -23,9 +22,8 @@ module.exports = {
   },
   LongTermProductRecords: async (_, { clientId }, { auth }) => {
     try {
-      const { clientId: client, isLoggedIn } = await auth
-      if (!isLoggedIn || client !== clientId)
-        generateError("Access Denied, not authorized")
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
 
       const records = await ProductRecord.find({
         $and: [{ clientId }, { productType: "Long-term" }],

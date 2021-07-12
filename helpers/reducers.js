@@ -27,6 +27,7 @@ module.exports = {
   productRecordReducer(record) {
     return {
       client: record.clientId,
+      recordId: record._id,
       name: record.name,
       productType: record.productType,
       buyingPrice: record.buyingPrice,

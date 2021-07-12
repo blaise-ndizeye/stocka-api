@@ -9,9 +9,8 @@ const { productRecordReducer } = require("../../../helpers/reducers")
 module.exports = {
   AddProductToRecord: async (_, { record, clientId }, { auth }) => {
     try {
-      const { clientId: client, isLoggedIn } = await auth
-      if (!isLoggedIn || client !== clientId)
-        generateError("Access Denied, not authorized")
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
 
       const { name, productType, amount } = record
       const productToRecord =
@@ -46,6 +45,30 @@ module.exports = {
         }
       )
       return productRecordReducer(newRecord)
+    } catch (e) {
+      throw e
+    }
+  },
+  DeleteProductRecord: async (_, { clientId, recordId }, { auth }) => {
+    try {
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
+
+      const recordExists = await ProductRecord.findOne({
+        $and: [{ clientId }, { _id: recordId }],
+      })
+      if (!recordExists) generateError("Product record doesn't exist")
+      let record = {
+        id: recordExists._id,
+        productType: recordExists.productType,
+      }
+      await ProductRecord.deleteOne({ _id: recordExists._id })
+      return {
+        success: true,
+        message: "Product record deleted successfully",
+        record: record.id,
+        productType: record.productType,
+      }
     } catch (e) {
       throw e
     }

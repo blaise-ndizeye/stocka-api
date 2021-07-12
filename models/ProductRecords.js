@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const LongRecordsSchema = new mongoose.Schema({
+const ProductRecordsSchema = new mongoose.Schema({
   clientId: {
     type: String,
     required: true,
@@ -36,4 +36,4 @@ const LongRecordsSchema = new mongoose.Schema({
   description: String,
 })
 
-module.exports = mongoose.model("LongRecords", LongRecordsSchema)
+module.exports = mongoose.model("ProductRecords", ProductRecordsSchema)

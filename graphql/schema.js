@@ -88,8 +88,8 @@ const typeDefs = gql`
     createdAt: String!
     shortTermProducts: [ShortTermProduct!]!
     longTermProducts: [LongTermProduct!]!
-    shortTermProductsRecords: [ProductRecord!]!
-    LongTermProductsRecords: [ProductRecord!]!
+    shortTermProductRecords: [ProductRecord!]!
+    longTermProductRecords: [ProductRecord!]!
   }
 
   type ProductRecord {

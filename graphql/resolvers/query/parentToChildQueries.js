@@ -1,4 +1,10 @@
-const { client: findClient } = require("../../../helpers/findFunctions")
+const {
+  client: findClient,
+  shortTermProducts,
+  shortTermProductsRecords,
+  longTermProducts,
+  longTermProductsRecords,
+} = require("../../../helpers/findFunctions")
 
 module.exports = {
   ClientLoginResponse: {
@@ -12,5 +18,11 @@ module.exports = {
   },
   ProductRecord: {
     client: (parent) => findClient(parent),
+  },
+  Client: {
+    shortTermProducts: (parent) => shortTermProducts(parent),
+    longTermProducts: (parent) => longTermProducts(parent),
+    shortTermProductRecords: (parent) => shortTermProductsRecords(parent),
+    longTermProductRecords: (parent) => longTermProductsRecords(parent),
   },
 }

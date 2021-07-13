@@ -115,4 +115,47 @@ module.exports = {
       throw e
     }
   },
+  UpdatePassword: async (
+    _,
+    { clientId, oldPassword, newPassword },
+    { auth }
+  ) => {
+    try {
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
+
+      const clientExists = await Client.findOne({ _id: clientId })
+      if (!clientExists) generateError(message)
+
+      if (!newPassword || newPassword.length < 6)
+        generateError("Password must have at least six characters")
+
+      if (
+        !passwordPattern_1.test(newPassword) ||
+        !passwordPattern_2.test(newPassword)
+      )
+        generateError("Password must contain numbers and letters")
+
+      const passwordMatch = await bcrypt.compare(
+        oldPassword,
+        clientExists.password
+      )
+      if (!passwordMatch) generateError("Invalid Password")
+
+      const salt = await bcrypt.genSalt(10)
+      const hashedPassword = await bcrypt.hash(newPassword, salt)
+      await Client.updateOne(
+        { _id: clientId },
+        {
+          $set: {
+            password: hashedPassword,
+          },
+        }
+      )
+      const updatedClient = await Client.findOne({ _id: clientId })
+      return clientReducer(updatedClient)
+    } catch (e) {
+      throw e
+    }
+  },
 }

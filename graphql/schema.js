@@ -219,6 +219,12 @@ const typeDefs = gql`
       email: String!
       password: String!
     ): Client!
+    UpdatePassword(
+      "Updating the client password using his/her old password and the clientId"
+      clientId: ID!
+      oldPassword: String!
+      newPassword: String!
+    ): Client!
   }
 `
 

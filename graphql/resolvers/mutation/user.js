@@ -14,8 +14,7 @@ const {
 
 module.exports = {
   RegisterClient: async (_, { client }) => {
-    const { username, email, phone, password, confirmPassword, role, gender } =
-      client
+    const { email, password, confirmPassword } = client
     try {
       const clientExists = await Client.findOne({ email })
 

@@ -43,4 +43,11 @@ module.exports = {
     })
     return schema.validate(data)
   },
+
+  emailValidation: (data) => {
+    const schema = Joi.object({
+      email: Joi.string().email().required(),
+    })
+    return schema.validate(data)
+  },
 }

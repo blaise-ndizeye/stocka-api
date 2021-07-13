@@ -1,7 +1,10 @@
 const bcrypt = require("bcrypt")
 
 const Client = require("../../../models/Client")
-const { registerValidation } = require("../../../helpers/validations")
+const {
+  registerValidation,
+  emailValidation,
+} = require("../../../helpers/validations")
 const { clientReducer } = require("../../../helpers/reducers")
 const {
   passwordPattern_1,
@@ -72,6 +75,37 @@ module.exports = {
         {
           $set: {
             username,
+          },
+        }
+      )
+      const updatedClient = await Client.findOne({ _id: clientId })
+      return clientReducer(updatedClient)
+    } catch (e) {
+      throw e
+    }
+  },
+  UpdateEmail: async (_, { clientId, email, password }, { auth }) => {
+    try {
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
+
+      const clientExists = await Client.findOne({ _id: clientId })
+      if (!clientExists) generateError(message)
+
+      const { error } = emailValidation({ email })
+      if (error) generateError(error.details[0].message)
+
+      const passwordMatch = await bcrypt.compare(
+        password,
+        clientExists.password
+      )
+      if (!passwordMatch) generateError("Invalid Password")
+
+      await Client.updateOne(
+        { _id: clientId },
+        {
+          $set: {
+            email,
           },
         }
       )

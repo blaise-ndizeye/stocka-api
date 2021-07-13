@@ -207,6 +207,18 @@ const typeDefs = gql`
       records: [ID!]!
       clientId: ID!
     ): DeleteSelectedRecordsResponse!
+    UpdateUsername(
+      "Updating the client username using his/her password and the clientId"
+      clientId: ID!
+      username: String!
+      password: String!
+    ): Client!
+    UpdateEmail(
+      "Updating the client email using his/her password and the clientId"
+      clientId: ID!
+      email: String!
+      password: String!
+    ): Client!
   }
 `
 

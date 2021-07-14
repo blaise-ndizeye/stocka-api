@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
 const Client = require("../../../models/Client")
 const {
@@ -11,6 +12,7 @@ const {
   passwordPattern_2,
   generateError,
 } = require("../../../utils/constants")
+const { FORGOT_PASSWORD_TOKEN } = require("../../../utils/keys")
 
 module.exports = {
   RegisterClient: async (_, { client }) => {
@@ -153,6 +155,44 @@ module.exports = {
       )
       const updatedClient = await Client.findOne({ _id: clientId })
       return clientReducer(updatedClient)
+    } catch (e) {
+      throw e
+    }
+  },
+  ResetPassword: async (_, { token, newPassword, confirmPassword }) => {
+    const tokenData = token.split("___")
+    const client = await Client.findOne({ _id: tokenData[1] })
+    if (!client) generateError("Invalid credentials")
+
+    try {
+      await jwt.verify(tokenData[0], FORGOT_PASSWORD_TOKEN + client.password)
+
+      if (newPassword !== confirmPassword)
+        generateError("Passwords must be the same")
+      if (!newPassword || newPassword.length < 6)
+        generateError("Password must have at least six characters")
+
+      if (
+        !passwordPattern_1.test(newPassword) ||
+        !passwordPattern_2.test(newPassword)
+      )
+        generateError("Password must contain numbers and letters")
+
+      const salt = await bcrypt.genSalt(10)
+      const hashedPassword = await bcrypt.hash(newPassword, salt)
+      await Client.updateOne(
+        { _id: client._id },
+        {
+          $set: {
+            password: hashedPassword,
+          },
+        }
+      )
+      return {
+        success: true,
+        email: client.email,
+        message: "Password updated successfully",
+      }
     } catch (e) {
       throw e
     }

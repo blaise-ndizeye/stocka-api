@@ -3,9 +3,13 @@ const bcrypt = require("bcrypt")
 
 const Client = require("../../../models/Client")
 
-const { loginValidation } = require("../../../helpers/validations")
+const {
+  loginValidation,
+  emailValidation,
+} = require("../../../helpers/validations")
 const { generateError } = require("../../../utils/constants")
-const { TOKEN_SECRET } = require("../../../utils/keys")
+const { TOKEN_SECRET, FORGOT_PASSWORD_TOKEN } = require("../../../utils/keys")
+const sendMail = require("../../../utils/mailClient")
 
 module.exports = {
   LoginClient: async (_, { email, password }) => {
@@ -26,6 +30,34 @@ module.exports = {
       return {
         token,
         client: client._id.toString(),
+      }
+    } catch (e) {
+      throw e
+    }
+  },
+  ForgotPassword: async (_, { email }) => {
+    try {
+      const { error } = emailValidation({ email })
+      if (error) generateError(error.details[0].message)
+
+      const userExists = await Client.findOne({ email })
+      if (!userExists) generateError("Invalid credentials")
+
+      const secret = FORGOT_PASSWORD_TOKEN + userExists.password
+      const { password, _id } = userExists
+      let resetToken = await jwt.sign({ clientId: _id, password }, secret, {
+        expiresIn: "2h",
+      })
+      resetToken = `${resetToken}___${_id}`
+      const status = await sendMail({
+        emailTo: userExists.email,
+        resetToken,
+      })
+      if (!status.success) generateError(status.message)
+      return {
+        success: true,
+        email,
+        message: `The link to reset the password sent to email: ${email} and is valid for two hours`,
       }
     } catch (e) {
       throw e

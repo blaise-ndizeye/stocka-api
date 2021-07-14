@@ -127,6 +127,12 @@ const typeDefs = gql`
     missedRecords: [ID!]!
   }
 
+  type ForgotPasswordResponse {
+    success: Boolean!
+    email: String!
+    message: String!
+  }
+
   type Query {
     "all query types will require Authorization tike the mutations except the LoginClient query where the client will get the authorization key and set asthe header key as Authorization and value as Bearer token and it last for 3 days"
     LoginClient(
@@ -150,6 +156,10 @@ const typeDefs = gql`
       "Get all short-term product records"
       clientId: ID!
     ): [ProductRecord!]!
+    ForgotPassword(
+      "Once the client forgot password he/she will send the email and send the link to the front-end which will get the data in parameters and send them to the server to update the password"
+      email: String!
+    ): ForgotPasswordResponse!
   }
 
   type Mutation {
@@ -225,6 +235,12 @@ const typeDefs = gql`
       oldPassword: String!
       newPassword: String!
     ): Client!
+    ResetPassword(
+      "Reseting the password by sending the token and the new password"
+      token: String!
+      newPassword: String!
+      confirmPassword: String!
+    ): ForgotPasswordResponse!
   }
 `
 

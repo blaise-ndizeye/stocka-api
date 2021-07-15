@@ -21,9 +21,10 @@ const server = new ApolloServer({
 })
 
 server
-  .listen()
+  .listen({ port: process.env.PORT || 4000 })
   .then(({ url }) => {
-    console.log(`Server is listenning at ${url}`)
+    console.log(`🚀  Server is ready at ${url}
+    📭  Query at https://studio.apollographql.com/dev`)
   })
   .catch((e) => {
     console.error(`Error occured: ${e}`)

@@ -38,4 +38,13 @@ module.exports = {
       dateRecorded: JSON.stringify(record.dateRecorded),
     }
   },
+  adminReducer(admin) {
+    return {
+      adminId: admin._id,
+      username: admin.username,
+      email: admin.email,
+      phone: admin.phone,
+      role: admin.role
+    }
+  }
 }

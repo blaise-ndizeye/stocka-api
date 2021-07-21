@@ -18,6 +18,15 @@ const typeDefs = gql`
     gender: String!
   }
 
+  input AdminCreds {
+    "The input fields required for registering the admin"
+    name: String!
+    email: String!
+    phone: String!
+    password: String!
+    confirmPassword: String!
+  }
+
   input ShortTermProductCreds {
     "the input values required for short-term-products and if no description value set it to = No description"
     name: String!
@@ -90,6 +99,15 @@ const typeDefs = gql`
     longTermProducts: [LongTermProduct!]!
     shortTermProductRecords: [ProductRecord!]!
     longTermProductRecords: [ProductRecord!]!
+  }
+
+  type Admin {
+    "the fields for the admin or the owner of the app to manage all users/clients registered in the app"
+    adminId: ID!
+    username: String!
+    email: String!
+    phone: String!
+    role: String!
   }
 
   type ProductRecord {
@@ -241,6 +259,10 @@ const typeDefs = gql`
       newPassword: String!
       confirmPassword: String!
     ): ForgotPasswordResponse!
+    RegisterAdmin(
+      "Registering the admin of the app by sending the credentials in admin object"
+      admin: AdminCreds
+    ): Admin!
   }
 `
 

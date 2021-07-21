@@ -3,7 +3,7 @@ const Joi = require("joi")
 module.exports = {
   registerValidation: (data) => {
     const schema = Joi.object({
-      username: Joi.string().max(50).min(3).required(),
+      username: Joi.string().max(100).min(3).required(),
       email: Joi.string().email().required(),
       phone: Joi.string().min(10).required(),
       role: Joi.string().required(),
@@ -24,7 +24,7 @@ module.exports = {
 
   productValidation: (data) => {
     const schema = Joi.object({
-      name: Joi.string().min(3).max(30).required(),
+      name: Joi.string().min(3).max(100).required(),
       buyingPrice: Joi.number().positive().required(),
       amount: Joi.number().positive().required(),
       pricePerUnit: Joi.number().positive().required(),
@@ -36,7 +36,7 @@ module.exports = {
 
   productToRecordValidation: (data) => {
     const schema = Joi.object({
-      name: Joi.string().min(3).max(30).required(),
+      name: Joi.string().min(3).max(100).required(),
       productType: Joi.string().required(),
       sellingPrice: Joi.number().positive().required(),
       amount: Joi.number().positive().required(),
@@ -47,6 +47,15 @@ module.exports = {
   emailValidation: (data) => {
     const schema = Joi.object({
       email: Joi.string().email().required(),
+    })
+    return schema.validate(data)
+  },
+  adminValidation: (data) => {
+    const schema = Joi.object({
+      name: Joi.string().min(3).max(100).required(),
+      email: Joi.string().email().required(),
+      phone: Joi.string().min(10).required(),
+      password: Joi.string().min(6).required(),
     })
     return schema.validate(data)
   },

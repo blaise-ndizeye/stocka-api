@@ -8,9 +8,9 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useFindAndModify: false,
     })
-    console.log(`Connected to DB...`)
+    console.log(`🗄️  Connected to DB`)
   } catch (e) {
-    console.error(`Error has occured: ${e}`)
+    console.error(`🚫  Error has occured: ${e}`)
   }
 }
 

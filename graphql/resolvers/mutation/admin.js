@@ -197,4 +197,19 @@ module.exports = {
       throw e
     }
   },
+  async DeleteNotification(_, { adminId, notificationId }, { secure }) {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      await Notification.deleteOne({ _id: notificationId })
+      return {
+        success: true,
+        message: "The notification deleted successfully",
+        notificationId,
+      }
+    } catch (e) {
+      throw e
+    }
+  },
 }

@@ -167,6 +167,12 @@ const typeDefs = gql`
     missedRecords: [ID!]!
   }
 
+  type DeleteNotificationResponse {
+    success: Boolean!
+    message: String!
+    notificationId: ID!
+  }
+
   type ForgotPasswordResponse {
     success: Boolean!
     email: String!
@@ -319,6 +325,11 @@ const typeDefs = gql`
       clientId: ID!
       message: String!
     ): NotifyResponse!
+    DeleteNotification(
+      "Delete the notification once needed by the admin"
+      adminId: ID!
+      notificationId: ID!
+    ): DeleteNotificationResponse!
   }
 `
 

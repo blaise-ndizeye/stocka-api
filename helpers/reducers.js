@@ -49,6 +49,7 @@ module.exports = {
   },
   notificationReducer(notification) {
     return {
+      notificationId: notification._id,
       admin: notification.adminId,
       client: notification.clientId,
       message: notification.message,

@@ -7,6 +7,12 @@ const typeDefs = gql`
     client: Client!
   }
 
+  type AdminLoginResponse {
+    "the response to the admin when he or she logs in and the admin is a nested query"
+    token: String!
+    admin: Admin!
+  }
+
   input ClientCreds {
     "The input fields required for registering the user"
     username: String!
@@ -152,7 +158,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    "all query types will require Authorization tike the mutations except the LoginClient query where the client will get the authorization key and set asthe header key as Authorization and value as Bearer token and it last for 3 days"
+    "all query types will require Authorization tike the mutations except the LoginClient, LoginAdmin query where the client will get the authorization key and set asthe header key as Authorization and value as Bearer token and it last for 3 days"
     LoginClient(
       "Login to the app with valid credentials and get the token with the user"
       email: String!
@@ -178,6 +184,11 @@ const typeDefs = gql`
       "Once the client forgot password he/she will send the email and send the link to the front-end which will get the data in parameters and send them to the server to update the password"
       email: String!
     ): ForgotPasswordResponse!
+    LoginAdmin(
+      "Login to the app as admin  with valid credentials"
+      email: String!
+      password: String!
+    ): AdminLoginResponse!
   }
 
   type Mutation {

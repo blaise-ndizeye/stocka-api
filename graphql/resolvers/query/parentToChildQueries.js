@@ -1,5 +1,6 @@
 const {
   client: findClient,
+  admin: findAdmin,
   shortTermProducts,
   shortTermProductsRecords,
   longTermProducts,
@@ -9,6 +10,9 @@ const {
 module.exports = {
   ClientLoginResponse: {
     client: (parent) => findClient(parent),
+  },
+  AdminLoginResponse: {
+    admin: (parent) => findAdmin(parent),
   },
   ShortTermProduct: {
     client: (parent) => findClient(parent),

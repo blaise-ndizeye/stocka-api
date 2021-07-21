@@ -65,7 +65,7 @@ module.exports = {
       throw e
     }
   },
-  AllNotifications: async (_, { clientId }, { auth }) => {
+  Notifications: async (_, { clientId }, { auth }) => {
     try {
       const { clientId: client, isLoggedIn, message } = await auth
       if (!isLoggedIn || client !== clientId) generateError(message)

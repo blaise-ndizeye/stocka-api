@@ -195,7 +195,7 @@ const typeDefs = gql`
       "Get all short-term product records"
       clientId: ID!
     ): [ProductRecord!]!
-    AllNotifications(
+    Notifications(
       "Get all notifications sent to the client by the admin all types"
       clientId: ID!
     ): [Notification!]!

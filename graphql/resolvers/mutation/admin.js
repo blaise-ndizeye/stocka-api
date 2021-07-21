@@ -119,4 +119,47 @@ module.exports = {
       throw e
     }
   },
+  async NotifyUnPaidClients(_, { adminId, message: notification }, { secure }) {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const { error } = notificationValidation({ message: notification })
+      if (error) generateError(error.details[0].message)
+      const adminObj = await Admin.findOne({ _id: adminId })
+
+      const unPaidPayments = await Payment.find({ paid: false })
+      if (unPaidPayments.length < 1)
+        return {
+          success: false,
+          message: "There are no unpaid clients to notify",
+          admin: adminReducer(adminObj),
+        }
+      for (let i in unPaidPayments) {
+        let clientObjId = unPaidPayments[i].clientId
+
+        let notifications = await Notification.find({
+          $and: [
+            { adminId },
+            { message: notification },
+            { clientId: clientObjId },
+          ],
+        })
+        if (notifications.length > 0) continue
+        await new Notification({
+          adminId,
+          clientId: clientObjId,
+          message: notification,
+        }).save()
+      }
+
+      return {
+        success: true,
+        message: "The notification successfully sent to unpaid clients",
+        admin: adminReducer(adminObj),
+      }
+    } catch (e) {
+      throw e
+    }
+  },
 }

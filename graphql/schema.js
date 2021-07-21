@@ -208,6 +208,10 @@ const typeDefs = gql`
       email: String!
       password: String!
     ): AdminLoginResponse!
+    AllNotifications(
+      "All notifications in the database and will be seen by admin"
+      adminId: ID!
+    ): [Notification!]!
   }
 
   type Mutation {

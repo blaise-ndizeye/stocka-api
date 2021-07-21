@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 
 const Admin = require("../../../models/Admin")
+const Notification = require("../../../models/Notification")
 
 const {
   loginValidation,
@@ -9,8 +10,9 @@ const {
 } = require("../../../helpers/validations")
 
 const { generateError } = require("../../../utils/constants")
-const { ADMIN_SECRET, FORGOT_PASSWORD_TOKEN } = require("../../../utils/keys")
+const { notificationReducer } = require("../../../helpers/reducers")
 const sendMail = require("../../../utils/mailClient")
+const { ADMIN_SECRET, FORGOT_PASSWORD_TOKEN } = require("../../../utils/keys")
 
 module.exports = {
   async LoginAdmin(_, { email, password }) {
@@ -32,6 +34,19 @@ module.exports = {
         token,
         admin: admin._id.toString(),
       }
+    } catch (e) {
+      throw e
+    }
+  },
+  AllNotifications: async (_, { adminId }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const notifications = await Notification.find().sort({ _id: -1 })
+      return notifications.map((notification) =>
+        notificationReducer(notification)
+      )
     } catch (e) {
       throw e
     }

@@ -29,4 +29,8 @@ module.exports = {
     shortTermProductRecords: (parent) => shortTermProductsRecords(parent),
     longTermProductRecords: (parent) => longTermProductsRecords(parent),
   },
+  Notification: {
+    admin: (parent) => findAdmin(parent),
+    client: (parent) => findClient(parent),
+  },
 }

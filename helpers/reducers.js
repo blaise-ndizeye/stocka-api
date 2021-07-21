@@ -44,7 +44,15 @@ module.exports = {
       username: admin.username,
       email: admin.email,
       phone: admin.phone,
-      role: admin.role
+      role: admin.role,
     }
-  }
+  },
+  notificationReducer(notification) {
+    return {
+      admin: notification.adminId,
+      client: notification.clientId,
+      message: notification.message,
+      createdAt: notification.createdAt,
+    }
+  },
 }

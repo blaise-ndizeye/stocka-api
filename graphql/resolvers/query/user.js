@@ -2,14 +2,16 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 
 const Client = require("../../../models/Client")
+const Notification = require("../../../models/Notification")
 
 const {
   loginValidation,
   emailValidation,
 } = require("../../../helpers/validations")
 const { generateError } = require("../../../utils/constants")
-const { TOKEN_SECRET, FORGOT_PASSWORD_TOKEN } = require("../../../utils/keys")
 const sendMail = require("../../../utils/mailClient")
+const { notificationReducer } = require("../../../helpers/reducers")
+const { TOKEN_SECRET, FORGOT_PASSWORD_TOKEN } = require("../../../utils/keys")
 
 module.exports = {
   LoginClient: async (_, { email, password }) => {
@@ -59,6 +61,21 @@ module.exports = {
         email,
         message: `The link to reset the password sent to email: ${email} and is valid for two hours`,
       }
+    } catch (e) {
+      throw e
+    }
+  },
+  AllNotifications: async (_, { clientId }, { auth }) => {
+    try {
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
+
+      const notifications = await Notification.find({ clientId }).sort({
+        _id: -1,
+      })
+      return notifications.map((notification) =>
+        notificationReducer(notification)
+      )
     } catch (e) {
       throw e
     }

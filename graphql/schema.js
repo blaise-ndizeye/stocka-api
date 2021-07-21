@@ -133,7 +133,7 @@ const typeDefs = gql`
   type Notification {
     "The fields to be returned for the notification to the client"
     client: Client!
-    Admin: Admin!
+    admin: Admin!
     message: String!
     createdAt: String!
   }
@@ -195,6 +195,10 @@ const typeDefs = gql`
       "Get all short-term product records"
       clientId: ID!
     ): [ProductRecord!]!
+    AllNotifications(
+      "Get all notifications sent to the client by the admin all types"
+      clientId: ID!
+    ): [Notification!]!
     ForgotPassword(
       "Once the client forgot password he/she will send the email and send the link to the front-end which will get the data in parameters and send them to the server to update the password"
       email: String!

@@ -162,4 +162,39 @@ module.exports = {
       throw e
     }
   },
+  async NotifyOneClient(
+    _,
+    { adminId, clientId, message: notification },
+    { secure }
+  ) {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+      const adminObj = await Admin.findOne({ _id: adminId })
+      const clientObj = await Client.findOne({ _id: clientId })
+      if (!clientObj) generateError("Client doesn't exist")
+
+      const { error } = notificationValidation({ message: notification })
+      if (error) generateError(error.details[0].message)
+
+      let notificationExist = await Notification.find({
+        $and: [{ adminId }, { message: notification }, { clientId }],
+      })
+      if (notificationExist.length > 0)
+        generateError("The notification being sent already exists")
+      await new Notification({
+        adminId,
+        clientId,
+        message: notification,
+      }).save()
+
+      return {
+        success: true,
+        message: `The notification successfully sent to selected client: ${clientObj.email}`,
+        admin: adminReducer(adminObj),
+      }
+    } catch (e) {
+      throw e
+    }
+  },
 }

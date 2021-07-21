@@ -7,7 +7,7 @@ module.exports = {
       email: Joi.string().email().required(),
       phone: Joi.string().min(10).required(),
       role: Joi.string().required(),
-      gender: Joi.string().max(4).required(),
+      gender: Joi.string().max(6).required(),
       password: Joi.string().min(6).required(),
       confirmPassword: Joi.string().min(6).required(),
     })
@@ -56,6 +56,12 @@ module.exports = {
       email: Joi.string().email().required(),
       phone: Joi.string().min(10).required(),
       password: Joi.string().min(6).required(),
+    })
+    return schema.validate(data)
+  },
+  notificationValidation: (data) => {
+    const schema = Joi.object({
+      message: Joi.string().min(5).required(),
     })
     return schema.validate(data)
   },

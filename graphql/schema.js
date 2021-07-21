@@ -130,6 +130,21 @@ const typeDefs = gql`
     description: String
   }
 
+  type Notification {
+    "The fields to be returned for the notification to the client"
+    client: Client!
+    Admin: Admin!
+    message: String!
+    createdAt: String!
+  }
+
+  type NotifyResponse {
+    "The fields for the response after sending request to perform any related action of notifying"
+    success: Boolean!
+    message: String!
+    admin: Admin!
+  }
+
   type DeleteProductResponse {
     "The response after deletion of the product will look like this"
     success: Boolean!
@@ -274,6 +289,11 @@ const typeDefs = gql`
       "Registering the admin of the app by sending the credentials in admin object"
       admin: AdminCreds
     ): Admin!
+    NotifyAllClients(
+      "Notify all clients => the message will be delivered to all clients"
+      adminId: ID!
+      message: String!
+    ): NotifyResponse!
   }
 `
 

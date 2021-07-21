@@ -23,6 +23,12 @@ module.exports = async (req) => {
         isLoggedIn: false,
         message: "Access Denied, not authorized",
       }
+    if (!client.active)
+      return {
+        clientId: client._id,
+        isLoggedIn: false,
+        message: "Access Denied, please activate your account",
+      }
 
     return {
       clientId: client.id,

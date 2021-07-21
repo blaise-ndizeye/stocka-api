@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt")
 const Admin = require("../../../models/Admin")
 const Client = require("../../../models/Client")
 const Notification = require("../../../models/Notification")
+const Payment = require("../../../models/Payment")
 
 const {
   adminValidation,
@@ -69,6 +70,49 @@ module.exports = {
       return {
         success: true,
         message: "The notification successfully sent to all clients",
+        admin: adminReducer(adminObj),
+      }
+    } catch (e) {
+      throw e
+    }
+  },
+  async NotifyPaidClients(_, { adminId, message: notification }, { secure }) {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const { error } = notificationValidation({ message: notification })
+      if (error) generateError(error.details[0].message)
+      const adminObj = await Admin.findOne({ _id: adminId })
+
+      const paidPayments = await Payment.find({ paid: true })
+      if (paidPayments.length < 1)
+        return {
+          success: false,
+          message: "There are no paid clients to notify",
+          admin: adminReducer(adminObj),
+        }
+      for (let i in paidPayments) {
+        let clientObjId = paidPayments[i].clientId
+
+        let notifications = await Notification.find({
+          $and: [
+            { adminId },
+            { message: notification },
+            { clientId: clientObjId },
+          ],
+        })
+        if (notifications.length > 0) continue
+        await new Notification({
+          adminId,
+          clientId: clientObjId,
+          message: notification,
+        }).save()
+      }
+
+      return {
+        success: true,
+        message: "The notification successfully sent to paid clients",
         admin: adminReducer(adminObj),
       }
     } catch (e) {

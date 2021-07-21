@@ -294,6 +294,22 @@ const typeDefs = gql`
       adminId: ID!
       message: String!
     ): NotifyResponse!
+    NotifyPaidClients(
+      "Notify to all paid clients => the message will be delivered only to paid clients"
+      adminId: ID!
+      message: String!
+    ): NotifyResponse!
+    NotifyUnPaidClients(
+      "Notify to all unpaid clients => the message will be delivered only to unpaid clients"
+      adminId: ID!
+      message: String!
+    ): NotifyResponse!
+    NotifyOneClient(
+      "Notify to one client => the message will be delivered only to one client"
+      adminId: ID!
+      clientId: ID!
+      message: String!
+    ): NotifyResponse!
   }
 `
 

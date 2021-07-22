@@ -33,4 +33,28 @@ module.exports = {
       throw e
     }
   },
+  AllLongTermProducts: async (_, { adminId }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const products = await LongTermProduct.find().sort({ _id: -1 })
+      return products.map((product) => productReducer(product))
+    } catch (e) {
+      throw e
+    }
+  },
+  AllLongTermProductRecords: async (_, { adminId }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const records = await ProductRecord.find({
+        productType: "Long-term",
+      }).sort({ _id: -1 })
+      return records.map((record) => productRecordReducer(record))
+    } catch (e) {
+      throw e
+    }
+  },
 }

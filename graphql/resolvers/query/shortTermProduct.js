@@ -34,4 +34,28 @@ module.exports = {
       throw e
     }
   },
+  AllShortTermProducts: async (_, { adminId }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const products = await ShortTermProduct.find().sort({ _id: -1 })
+      return products.map((product) => productReducer(product))
+    } catch (e) {
+      throw e
+    }
+  },
+  AllShortTermProductRecords: async (_, { adminId }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const records = await ProductRecord.find({
+        productType: "Short-term",
+      }).sort({ _id: -1 })
+      return records.map((record) => productRecordReducer(record))
+    } catch (e) {
+      throw e
+    }
+  },
 }

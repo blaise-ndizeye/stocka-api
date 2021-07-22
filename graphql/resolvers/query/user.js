@@ -54,6 +54,7 @@ module.exports = {
       const status = await sendMail({
         emailTo: userExists.email,
         resetToken,
+        userType: "user",
       })
       if (!status.success) generateError(status.message)
       return {

@@ -123,6 +123,7 @@ module.exports = {
       const status = await sendMail({
         emailTo: adminExists.email,
         resetToken,
+        userType: "admin",
       })
       if (!status.success) generateError(status.message)
       return {

@@ -69,4 +69,15 @@ module.exports = {
       throw e
     }
   },
+  AllLongTermProducts: async (_, { adminId }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const products = await LongTermProduct.find().sort({ _id: -1 })
+      return products.map((product) => productReducer(product))
+    } catch (e) {
+      throw e
+    }
+  },
 }

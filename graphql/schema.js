@@ -350,6 +350,12 @@ const typeDefs = gql`
       adminId: ID!
       notificationId: ID!
     ): DeleteNotificationResponse!
+    AdminResetPassword(
+      "Reseting the password for the admin by sending the token and the new password"
+      token: String!
+      newPassword: String!
+      confirmPassword: String!
+    ): ForgotPasswordResponse!
   }
 `
 

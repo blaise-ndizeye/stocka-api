@@ -212,4 +212,33 @@ module.exports = {
       throw e
     }
   },
+  AdminResetPassword: async (_, { token, newPassword, confirmPassword }) => {
+    const tokenData = token.split("___")
+    const admin = await Admin.findOne({ _id: tokenData[1] })
+    if (!admin) generateError("Invalid credentials")
+
+    try {
+      await jwt.verify(tokenData[0], FORGOT_PASSWORD_TOKEN + admin.password)
+
+      passwordValidation({ password: newPassword, confirmPassword })
+
+      const salt = await bcrypt.genSalt(10)
+      const hashedPassword = await bcrypt.hash(newPassword, salt)
+      await Admin.updateOne(
+        { _id: admin._id },
+        {
+          $set: {
+            password: hashedPassword,
+          },
+        }
+      )
+      return {
+        success: true,
+        email: admin.email,
+        message: "Password updated successfully",
+      }
+    } catch (e) {
+      throw e
+    }
+  },
 }

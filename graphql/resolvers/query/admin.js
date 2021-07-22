@@ -9,11 +9,7 @@ const {
   emailValidation,
 } = require("../../../helpers/validations")
 
-const {
-  notificationReducer,
-  productReducer,
-  productRecordReducer,
-} = require("../../../helpers/reducers")
+const { notificationReducer } = require("../../../helpers/reducers")
 const { generateError } = require("../../../utils/constants")
 const sendMail = require("../../../utils/mailClient")
 const { ADMIN_SECRET, FORGOT_PASSWORD_TOKEN } = require("../../../utils/keys")

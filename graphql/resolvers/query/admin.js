@@ -106,4 +106,32 @@ module.exports = {
       throw e
     }
   },
+  AdminForgotPassword: async (_, { email }) => {
+    try {
+      const { error } = emailValidation({ email })
+      if (error) generateError(error.details[0].message)
+
+      const adminExists = await Admin.findOne({ email })
+      if (!adminExists) generateError("Invalid credentials")
+
+      const secret = FORGOT_PASSWORD_TOKEN + adminExists.password
+      const { password, _id } = adminExists
+      let resetToken = await jwt.sign({ adminId: _id, password }, secret, {
+        expiresIn: "1h",
+      })
+      resetToken = `${resetToken}___${_id}`
+      const status = await sendMail({
+        emailTo: adminExists.email,
+        resetToken,
+      })
+      if (!status.success) generateError(status.message)
+      return {
+        success: true,
+        email,
+        message: `The link to reset the password sent to email: ${email} and is valid for one hour`,
+      }
+    } catch (e) {
+      throw e
+    }
+  },
 }

@@ -235,6 +235,10 @@ const typeDefs = gql`
       "All short-term-product-records found in the database and will only be seen by admin"
       adminId: ID!
     ): [ProductRecord!]!
+    AdminForgotPassword(
+      "Once the admin forgot password he/she will send the email and send the link to the front-end which will get the data in parameters and send them to the server to update the password"
+      email: String!
+    ): ForgotPasswordResponse!
   }
 
   type Mutation {

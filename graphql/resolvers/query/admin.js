@@ -3,14 +3,21 @@ const bcrypt = require("bcrypt")
 
 const Admin = require("../../../models/Admin")
 const Notification = require("../../../models/Notification")
+const ShortTermProduct = require("../../../models/ShortTermProduct")
+const LongTermProduct = require("../../../models/LongTermProduct")
+const ProductRecords = require("../../../models/ProductRecords")
 
 const {
   loginValidation,
   emailValidation,
 } = require("../../../helpers/validations")
 
+const {
+  notificationReducer,
+  productReducer,
+  productRecordReducer,
+} = require("../../../helpers/reducers")
 const { generateError } = require("../../../utils/constants")
-const { notificationReducer } = require("../../../helpers/reducers")
 const sendMail = require("../../../utils/mailClient")
 const { ADMIN_SECRET, FORGOT_PASSWORD_TOKEN } = require("../../../utils/keys")
 
@@ -47,6 +54,17 @@ module.exports = {
       return notifications.map((notification) =>
         notificationReducer(notification)
       )
+    } catch (e) {
+      throw e
+    }
+  },
+  AllShortTermProducts: async (_, { adminId }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const products = await ShortTermProduct.find().sort({ _id: -1 })
+      return products.map((product) => productReducer(product))
     } catch (e) {
       throw e
     }

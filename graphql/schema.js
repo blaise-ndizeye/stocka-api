@@ -219,6 +219,22 @@ const typeDefs = gql`
       "All notifications in the database and will be seen by admin"
       adminId: ID!
     ): [Notification!]!
+    AllShortTermProducts(
+      "All short-term products found in the database and will only be seen by admin"
+      adminId: ID!
+    ): [ShortTermProduct!]!
+    AllLongTermProducts(
+      "All long-term products found in the database and will only be seen by admin"
+      adminId: ID!
+    ): [LongTermProduct!]!
+    AllShortTermProductRecords(
+      "All short-term-product-records found in the database and will only be seen by admin"
+      adminId: ID!
+    ): [ProductRecord!]!
+    AllLongTermProductRecords(
+      "All short-term-product-records found in the database and will only be seen by admin"
+      adminId: ID!
+    ): [ProductRecord!]!
   }
 
   type Mutation {

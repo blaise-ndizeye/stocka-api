@@ -80,4 +80,17 @@ module.exports = {
       throw e
     }
   },
+  AllShortTermProductRecords: async (_, { adminId }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const records = await ProductRecords.find({
+        productType: "Short-term",
+      }).sort({ _id: -1 })
+      return records.map((record) => productRecordReducer(record))
+    } catch (e) {
+      throw e
+    }
+  },
 }

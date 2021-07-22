@@ -118,7 +118,7 @@ module.exports = {
   },
   UpdatePassword: async (
     _,
-    { clientId, oldPassword, newPassword },
+    { clientId, oldPassword, newPassword, confirmPassword },
     { auth }
   ) => {
     try {
@@ -127,7 +127,8 @@ module.exports = {
 
       const clientExists = await Client.findOne({ _id: clientId })
       if (!clientExists) generateError(message)
-
+      if (newPassword !== confirmPassword)
+        generateError("New Password must equal to Confirm Password")
       if (!newPassword || newPassword.length < 6)
         generateError("Password must have at least six characters")
 

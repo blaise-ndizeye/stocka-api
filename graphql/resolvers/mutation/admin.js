@@ -241,4 +241,118 @@ module.exports = {
       throw e
     }
   },
+  AdminUpdateUsername: async (
+    _,
+    { adminId, username, password },
+    { secure }
+  ) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const adminExists = await Client.findOne({ _id: adminId })
+      if (!adminExists) generateError(message)
+
+      if (typeof username !== "string" || username.length < 3)
+        generateError("Username must be valid and have minimum length of three")
+
+      if (!password || password.length < 6)
+        generateError("Password must have at least six characters")
+
+      if (
+        !passwordPattern_1.test(password) ||
+        !passwordPattern_2.test(password)
+      )
+        generateError("Password must contain numbers and letters")
+
+      const passwordMatch = await bcrypt.compare(password, adminExists.password)
+      if (!passwordMatch) generateError("Invalid Password")
+
+      await Admin.updateOne(
+        { _id: adminId },
+        {
+          $set: {
+            username,
+          },
+        }
+      )
+      const updatedAdmin = await Admin.findOne({ _id: adminId })
+      return adminReducer(updatedAdmin)
+    } catch (e) {
+      throw e
+    }
+  },
+  AdminUpdateEmail: async (_, { adminId, email, password }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const adminExists = await Admin.findOne({ _id: adminId })
+      if (!adminExists) generateError(message)
+
+      const { error } = emailValidation({ email })
+      if (error) generateError(error.details[0].message)
+
+      const passwordMatch = await bcrypt.compare(password, adminExists.password)
+      if (!passwordMatch) generateError("Invalid Password")
+
+      await Admin.updateOne(
+        { _id: clientId },
+        {
+          $set: {
+            email,
+          },
+        }
+      )
+      const updatedAdmin = await Admin.findOne({ _id: adminId })
+      return adminReducer(updatedAdmin)
+    } catch (e) {
+      throw e
+    }
+  },
+  AdminUpdatePassword: async (
+    _,
+    { adminId, oldPassword, newPassword, confirmPassword },
+    { secure }
+  ) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const adminExists = await Admin.findOne({ _id: adminId })
+      if (!adminExists) generateError(message)
+
+      if (newPassword !== confirmPassword)
+        generateError("New password must equal to Confirm password")
+      if (!newPassword || newPassword.length < 6)
+        generateError("Password must have at least six characters")
+
+      if (
+        !passwordPattern_1.test(newPassword) ||
+        !passwordPattern_2.test(newPassword)
+      )
+        generateError("Password must contain numbers and letters")
+
+      const passwordMatch = await bcrypt.compare(
+        oldPassword,
+        adminExists.password
+      )
+      if (!passwordMatch) generateError("Invalid Password")
+
+      const salt = await bcrypt.genSalt(10)
+      const hashedPassword = await bcrypt.hash(newPassword, salt)
+      await Admin.updateOne(
+        { _id: adminId },
+        {
+          $set: {
+            password: hashedPassword,
+          },
+        }
+      )
+      const updatedAdmin = await Admin.findOne({ _id: adminId })
+      return adminReducer(updatedAdmin)
+    } catch (e) {
+      throw e
+    }
+  },
 }

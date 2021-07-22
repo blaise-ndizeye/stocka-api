@@ -356,6 +356,25 @@ const typeDefs = gql`
       newPassword: String!
       confirmPassword: String!
     ): ForgotPasswordResponse!
+    AdminUpdateUsername(
+      "Updating the admin username using his/her password and the clientId"
+      adminId: ID!
+      username: String!
+      password: String!
+    ): Client!
+    AdminUpdateEmail(
+      "Updating the admin email using his/her password and the clientId"
+      adminId: ID!
+      email: String!
+      password: String!
+    ): Client!
+    AdminUpdatePassword(
+      "Updating the admin password using his/her old password and the clientId"
+      adminId: ID!
+      oldPassword: String!
+      newPassword: String!
+      confirmPassword: String!
+    ): Client!
   }
 `
 

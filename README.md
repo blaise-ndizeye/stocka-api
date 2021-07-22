@@ -546,11 +546,17 @@ mutation ($clientId: ID!, $email: String!, $password: String!) {
 - UpdatePassword :
 
 ```graphql
-mutation ($clientId: ID!, $newPassword: String!, $oldPassword: String!) {
+mutation (
+  $clientId: ID!
+  $newPassword: String!
+  $oldPassword: String!
+  $confirmPassword: String!
+) {
   UpdatePassword(
     clientId: $clientid
     oldPassword: $oldPassword
     newPassword: $newPassword
+    confirmPassword: $confirmPassword
   ) {
     clientId
     username

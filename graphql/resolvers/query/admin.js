@@ -3,13 +3,19 @@ const bcrypt = require("bcrypt")
 
 const Admin = require("../../../models/Admin")
 const Notification = require("../../../models/Notification")
+const Payment = require("../../../models/Payment")
+const Status = require("../../../models/Status")
 
 const {
   loginValidation,
   emailValidation,
 } = require("../../../helpers/validations")
 
-const { notificationReducer } = require("../../../helpers/reducers")
+const {
+  notificationReducer,
+  paymentReducer,
+  premiumReducer,
+} = require("../../../helpers/reducers")
 const { generateError } = require("../../../utils/constants")
 const sendMail = require("../../../utils/mailClient")
 const { ADMIN_SECRET, FORGOT_PASSWORD_TOKEN } = require("../../../utils/keys")
@@ -76,6 +82,43 @@ module.exports = {
         email,
         message: `The link to reset the password sent to email: ${email} and is valid for one hour`,
       }
+    } catch (e) {
+      throw e
+    }
+  },
+  AllPayments: async (_, { adminId }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const payments = await Payment.find().sort({ _id: -1 })
+      return payments.map((payment) => paymentReducer(payment))
+    } catch (e) {
+      throw e
+    }
+  },
+  AllPremiums: async (_, { adminId, clientId }, { secure, auth }) => {
+    try {
+      const {
+        adminId: admin,
+        isLoggedIn: adminLoggedIn,
+        message: adminMsg,
+      } = await secure
+      const {
+        clientId: client,
+        isLoggedIn: clientLoggedIn,
+        message: clientMsg,
+      } = await auth
+
+      const condition = !clientId
+        ? !adminLoggedIn || admin !== adminId
+        : !clientLoggedIn || client !== clientId
+      const message = !clientId ? adminMsg : clientMsg
+
+      if (condition) generateError(message)
+
+      const premiums = await Status.find().sort({ _id: -1 })
+      return premiums.map((premium) => premiumReducer(premium))
     } catch (e) {
       throw e
     }

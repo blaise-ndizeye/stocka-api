@@ -8,7 +8,7 @@ module.exports = {
       role: client.role,
       gender: client.gender,
       active: client.active,
-      createdAt: client.createdAt.toDateString(),
+      createdAt: client.createdAt.toGMTString(),
     }
   },
   productReducer(product) {
@@ -20,8 +20,8 @@ module.exports = {
       amount: product.amount,
       pricePerUnit: product.pricePerUnit,
       description: product.description,
-      dateOfEntry: product.dateOfEntry.toDateString(),
-      dateOfExpry: product.dateOfExpry.toDateString(),
+      dateOfEntry: product.dateOfEntry.toGMTString(),
+      dateOfExpry: product.dateOfExpry.toGMTString(),
     }
   },
   productRecordReducer(record) {
@@ -34,8 +34,8 @@ module.exports = {
       sellingPrice: record.sellingPrice,
       amount: record.amount,
       description: record.description,
-      dateOfEntry: record.dateOfEntry.toDateString(),
-      dateRecorded: record.dateRecorded.toDateString(),
+      dateOfEntry: record.dateOfEntry.toGMTString(),
+      dateRecorded: record.dateRecorded.toGMTString(),
     }
   },
   adminReducer(admin) {
@@ -46,7 +46,7 @@ module.exports = {
       phone: admin.phone,
       gender: admin.gender,
       role: admin.role,
-      createdAt: admin.createdAt.toDateString(),
+      createdAt: admin.createdAt.toGMTString(),
     }
   },
   notificationReducer(notification) {
@@ -55,7 +55,25 @@ module.exports = {
       admin: notification.adminId,
       client: notification.clientId,
       message: notification.message,
-      createdAt: notification.createdAt.toDateString(),
+      createdAt: notification.createdAt.toGMTString(),
+    }
+  },
+  paymentReducer(pays) {
+    return {
+      paymentId: pays._id,
+      client: pays.clientId,
+      paid: pays.paid,
+      expryDate: pays.expryDate.toGMTString(),
+      refund: pays.refund,
+    }
+  },
+  premiumReducer(premium) {
+    return {
+      premiumId: premium._id,
+      amountPaid: premium.amountPaid,
+      duration: premium.duration,
+      createdAt: premium.createdAt.toGMTString(),
+      updatedAt: premium.updatedAt.toGMTString(),
     }
   },
 }

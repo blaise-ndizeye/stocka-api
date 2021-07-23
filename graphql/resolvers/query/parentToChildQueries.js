@@ -33,4 +33,7 @@ module.exports = {
     admin: (parent) => findAdmin(parent),
     client: (parent) => findClient(parent),
   },
+  Payment: {
+    client: (parent) => findClient(parent),
+  },
 }

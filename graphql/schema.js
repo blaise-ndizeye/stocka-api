@@ -141,6 +141,24 @@ const typeDefs = gql`
     createdAt: String!
   }
 
+  type Payment {
+    "The fields to be returned for the payment operation to the admin"
+    paymentId: ID!
+    client: Client!
+    paid: Boolean!
+    expryDate: String!
+    refund: Float!
+  }
+
+  type Premium {
+    "The fields to be returned for the premium cost to the admin and the client:=> the duration property represents months represented as floating number"
+    premiumId: ID!
+    amountPaid: Float!
+    duration: Float!
+    createdAt: String!
+    updatedAt: String!
+  }
+
   type NotifyResponse {
     "The fields for the response after sending request to perform any related action of notifying"
     success: Boolean!
@@ -247,6 +265,15 @@ const typeDefs = gql`
       "Once the admin forgot password he/she will send the email and send the link to the front-end which will get the data in parameters and send them to the server to update the password"
       email: String!
     ): ForgotPasswordResponse!
+    AllPayments(
+      "All payments made by the clients paying for the premium to use the app"
+      adminId: ID!
+    ): [Payment!]!
+    AllPremiums(
+      "⚠️ This query is both used by the admin and the client:=> 🚧  All premium costs to be chosen by the clients for using the app"
+      adminId: ID
+      clientId: ID
+    ): [Premium!]!
   }
 
   type Mutation {

@@ -397,6 +397,11 @@ const typeDefs = gql`
       newPremiumCost: Float!
       newDuration: Float
     ): PremiumCostResponse!
+    AdminDeleteCost(
+      "To delete the previously cost set by the admin"
+      adminId: ID!
+      premiumId: ID!
+    ): PremiumCostResponse!
   }
 `
 

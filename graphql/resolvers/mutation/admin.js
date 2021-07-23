@@ -405,4 +405,22 @@ module.exports = {
       throw e
     }
   },
+  AdminDeleteCost: async (_, { adminId, premiumId }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const findStatus = await Status.findOne({ _id: premiumId })
+      if (!findStatus) generateError("The status to delete not found")
+
+      await Status.deleteOne({ _id: premiumId })
+      return {
+        success: true,
+        message: "The premium cost deleted successfully",
+        premiumId,
+      }
+    } catch (e) {
+      throw e
+    }
+  },
 }

@@ -3,6 +3,9 @@ const jwt = require("jsonwebtoken")
 
 const Client = require("../../../models/Client")
 const Payment = require("../../../models/Payment")
+const ShortTermProduct = require("../../../models/ShortTermProduct")
+const LongTermProduct = require("../../../models/LongTermProduct")
+const Notification = require("../../../models/Notification")
 
 const {
   registerValidation,
@@ -203,6 +206,39 @@ module.exports = {
         success: true,
         email: client.email,
         message: "Password updated successfully",
+      }
+    } catch (e) {
+      throw e
+    }
+  },
+  DeleteAccount: async (_, { clientId }, { auth }) => {
+    try {
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
+
+      const paymentStatus = await Payment.findOne({ clientId })
+      if (paymentStatus && !paymentStatus.paid)
+        generateError(
+          "Please pay for the premium to be able to perform this operation"
+        )
+
+      const delShortTermProducts = ShortTermProduct.deleteMany({ clientId })
+      const delLongTermProducts = LongTermProduct.deleteMany({ clientId })
+      const delPayment = Payment.deleteMany({ clientId })
+      const delNotification = Notification.deleteMany({ clientId })
+      const delAcc = Client.deleteOne({ _id: clientId })
+
+      await Promise.all([
+        delShortTermProducts,
+        delLongTermProducts,
+        delPayment,
+        delNotification,
+        delAcc,
+      ])
+      return {
+        success: true,
+        message: "Account deleted successfully",
+        accountId: clientId,
       }
     } catch (e) {
       throw e

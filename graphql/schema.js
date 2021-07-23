@@ -205,6 +205,12 @@ const typeDefs = gql`
     premiumId: ID!
   }
 
+  type DeleteAccountResponse {
+    success: Boolean!
+    message: String!
+    accountId: ID!
+  }
+
   type Query {
     "all query types will require Authorization tike the mutations except the LoginClient, LoginAdmin query where the client will get the authorization key and set asthe header key as Authorization and value as Bearer token and it last for 3 days"
     LoginClient(
@@ -356,6 +362,10 @@ const typeDefs = gql`
       newPassword: String!
       confirmPassword: String!
     ): ForgotPasswordResponse!
+    DeleteAccount(
+      "Deleting the account by the user which will completely remove him from the database"
+      clientId: ID!
+    ): DeleteAccountResponse!
     RegisterAdmin(
       "Registering the admin of the app by sending the credentials in admin object"
       admin: AdminCreds

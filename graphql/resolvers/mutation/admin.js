@@ -4,6 +4,7 @@ const Admin = require("../../../models/Admin")
 const Client = require("../../../models/Client")
 const Notification = require("../../../models/Notification")
 const Payment = require("../../../models/Payment")
+const Status = require("../../../models/Status")
 
 const {
   adminValidation,
@@ -343,6 +344,63 @@ module.exports = {
       )
       const updatedAdmin = await Admin.findOne({ _id: adminId })
       return adminReducer(updatedAdmin)
+    } catch (e) {
+      throw e
+    }
+  },
+  AdminSetCost: async (_, { adminId, premiumCost, duration }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      if (premiumCost < 1) generateError("Invalid premium cost")
+      if (duration <= 0) generateError("Invalid duration")
+
+      const findPremium = await Status.findOne({
+        $or: [{ premiumCost }, { duration }],
+      })
+      if (findPremium)
+        generateError("The premium with that cost/duration is already set")
+
+      const status = await new Status({ premiumCost, duration }).save()
+      return {
+        success: true,
+        message: "The premium cost set successfully",
+        premiumId: status.id,
+      }
+    } catch (e) {
+      throw e
+    }
+  },
+  AdminUpdateCost: async (
+    _,
+    { adminId, premiumId, newPremiumCost, newDuration },
+    { secure }
+  ) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      if (newPremiumCost < 1) generateError("Invalid premium cost")
+      if (newDuration <= 0) generateError("Invalid duration")
+
+      const findStatus = await Status.findOne({ _id: premiumId })
+      if (!findStatus) generateError("The premium cost to update not found")
+
+      await Status.updateOne(
+        { _id: premiumId },
+        {
+          $set: {
+            premiumCost: newPremiumCost,
+            duration: !newDuration ? findStatus.duration : newDuration,
+          },
+        }
+      )
+      return {
+        success: true,
+        message: "The premium cost updated successfully",
+        premiumId,
+      }
     } catch (e) {
       throw e
     }

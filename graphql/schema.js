@@ -181,6 +181,12 @@ const typeDefs = gql`
     message: String!
   }
 
+  type PremiumCostResponse {
+    success: Boolean!
+    message: String!
+    premiumId: ID!
+  }
+
   type Query {
     "all query types will require Authorization tike the mutations except the LoginClient, LoginAdmin query where the client will get the authorization key and set asthe header key as Authorization and value as Bearer token and it last for 3 days"
     LoginClient(
@@ -378,6 +384,19 @@ const typeDefs = gql`
       newPassword: String!
       confirmPassword: String!
     ): Admin!
+    AdminSetCost(
+      "To set the cost to be paid by the clients for using the app => 1 month(30 days)"
+      adminId: ID!
+      premiumCost: Float!
+      duration: Float!
+    ): PremiumCostResponse!
+    AdminUpdateCost(
+      "To update the previously set premium cost to be paid by the clients using the app"
+      adminId: ID!
+      premiumId: ID!
+      newPremiumCost: Float!
+      newDuration: Float
+    ): PremiumCostResponse!
   }
 `
 

@@ -211,7 +211,7 @@ module.exports = {
       throw e
     }
   },
-  DeleteAccount: async (_, { clientId }, { auth }) => {
+  DeleteAccount: async (_, { clientId, confirmPassword }, { auth }) => {
     try {
       const { clientId: client, isLoggedIn, message } = await auth
       if (!isLoggedIn || client !== clientId) generateError(message)
@@ -221,6 +221,13 @@ module.exports = {
         generateError(
           "Please pay for the premium to be able to perform this operation"
         )
+
+      const clientExists = await Client.findOne({ _id: clientId })
+      const passwordMatch = await bcrypt.compare(
+        confirmPassword,
+        clientExists.password
+      )
+      if (!passwordMatch) generateError("Invalid Password")
 
       const delShortTermProducts = ShortTermProduct.deleteMany({ clientId })
       const delLongTermProducts = LongTermProduct.deleteMany({ clientId })

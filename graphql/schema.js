@@ -29,6 +29,7 @@ const typeDefs = gql`
     name: String!
     email: String!
     phone: String!
+    gender: String!
     password: String!
     confirmPassword: String!
   }
@@ -365,6 +366,7 @@ const typeDefs = gql`
     DeleteAccount(
       "Deleting the account by the user which will completely remove him from the database"
       clientId: ID!
+      confirmPassword: String!
     ): DeleteAccountResponse!
     RegisterAdmin(
       "Registering the admin of the app by sending the credentials in admin object"
@@ -439,6 +441,11 @@ const typeDefs = gql`
       adminId: ID!
       premiumId: ID!
     ): PremiumCostResponse!
+    AdminDeleteAccount(
+      "⚠️ To delete this account will set the admin with:=> email: admin@stocka.com, password: admin1@graph"
+      adminId: ID!
+      confirmPassword: String!
+    ): DeleteAccountResponse!
   }
 `
 

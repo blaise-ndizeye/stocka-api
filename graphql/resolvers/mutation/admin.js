@@ -15,6 +15,7 @@ const { adminReducer } = require("../../../helpers/reducers")
 const {
   generateError,
   passwordValidation,
+  adminAccRecover,
 } = require("../../../utils/constants")
 
 module.exports = {
@@ -32,12 +33,30 @@ module.exports = {
       })
       if (error) generateError(error.details[0].message)
 
-      const adminExists = await Admin.findOne({ email })
-      if (adminExists) generateError("Admin already exists")
+      const adminExists = await Admin.find()
+      if (
+        adminExists.length > 0 &&
+        adminExists[0].email !== adminAccRecover.email
+      )
+        generateError("Admin already exists")
 
       const salt = await bcrypt.genSalt(10)
       const hashedPassword = await bcrypt.hash(password, salt)
 
+      if (adminExists[0].email === adminAccRecover.email) {
+        await Admin.updateOne(
+          { _id: adminExists[0]._id },
+          {
+            username: name,
+            email,
+            phone,
+            gender,
+            password: hashedPassword,
+          }
+        )
+        const updatedAdmin = await Admin.findOne({ email })
+        return adminReducer(updatedAdmin)
+      }
       const newAdmin = await new Admin({
         username: name,
         email,
@@ -418,6 +437,41 @@ module.exports = {
         success: true,
         message: "The premium cost deleted successfully",
         premiumId,
+      }
+    } catch (e) {
+      throw e
+    }
+  },
+  AdminDeleteAccount: async (_, { adminId, confirmPassword }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const findAdmin = await Admin.findOne({ _id: adminId })
+      const passwordMatch = await bcrypt.compare(
+        confirmPassword,
+        findAdmin.password
+      )
+      if (!passwordMatch) generateError("Invalid Password")
+
+      const { email, password, username, gender, phone } = adminAccRecover
+      const hashedPassword = await bcrypt.hash(password, 10)
+      await Admin.updateOne(
+        { _id: adminId },
+        {
+          $set: {
+            username,
+            phone,
+            gender,
+            email,
+            password: hashedPassword,
+          },
+        }
+      )
+      return {
+        success: true,
+        message: "Account deleted successfully",
+        accountId: adminId,
       }
     } catch (e) {
       throw e

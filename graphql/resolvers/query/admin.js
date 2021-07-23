@@ -27,10 +27,10 @@ module.exports = {
       if (error) generateError(error.details[0].message)
 
       const admin = await Admin.findOne({ email })
-      if (!admin) generateError("Admin doesn't exist")
+      if (!admin) generateError("Invalid credentials")
 
       const passwordMatch = await bcrypt.compare(password, admin.password)
-      if (!passwordMatch) generateError("Invalid admin credentials")
+      if (!passwordMatch) generateError("Invalid credentials")
 
       const token = await jwt.sign({ adminId: admin._id }, ADMIN_SECRET, {
         expiresIn: "24h",

@@ -19,4 +19,11 @@ module.exports = {
     dateObj.setDate(dateObj.getDate() + numOfDays)
     return dateObj
   },
+  adminAccRecover: {
+    email: `admin@stocka.com`,
+    password: `admin1@graph`,
+    username: "Stocka Admin",
+    gender: "Male",
+    phone: "0787657134",
+  },
 }

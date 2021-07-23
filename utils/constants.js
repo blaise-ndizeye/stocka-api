@@ -15,4 +15,8 @@ module.exports = {
     if (!passwordPattern_1.test(password) || !passwordPattern_2.test(password))
       throw new Error("Password must include letters and numbers")
   },
+  newDate: (dateObj, numOfDays) => {
+    dateObj.setDate(dateObj.getDate() + numOfDays)
+    return dateObj
+  },
 }

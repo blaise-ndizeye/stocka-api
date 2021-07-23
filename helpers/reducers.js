@@ -8,7 +8,7 @@ module.exports = {
       role: client.role,
       gender: client.gender,
       active: client.active,
-      createdAt: JSON.stringify(client.createdAt),
+      createdAt: client.createdAt.toDateString(),
     }
   },
   productReducer(product) {
@@ -20,8 +20,8 @@ module.exports = {
       amount: product.amount,
       pricePerUnit: product.pricePerUnit,
       description: product.description,
-      dateOfEntry: JSON.stringify(product.dateOfEntry),
-      dateOfExpry: JSON.stringify(product.dateOfExpry),
+      dateOfEntry: product.dateOfEntry.toDateString(),
+      dateOfExpry: product.dateOfExpry.toDateString(),
     }
   },
   productRecordReducer(record) {
@@ -34,8 +34,8 @@ module.exports = {
       sellingPrice: record.sellingPrice,
       amount: record.amount,
       description: record.description,
-      dateOfEntry: JSON.stringify(record.dateOfEntry),
-      dateRecorded: JSON.stringify(record.dateRecorded),
+      dateOfEntry: record.dateOfEntry.toDateString(),
+      dateRecorded: record.dateRecorded.toDateString(),
     }
   },
   adminReducer(admin) {
@@ -46,7 +46,7 @@ module.exports = {
       phone: admin.phone,
       gender: admin.gender,
       role: admin.role,
-      createdAt: JSON.stringify(admin.createdAt),
+      createdAt: admin.createdAt.toDateString(),
     }
   },
   notificationReducer(notification) {
@@ -55,7 +55,7 @@ module.exports = {
       admin: notification.adminId,
       client: notification.clientId,
       message: notification.message,
-      createdAt: JSON.stringify(notification.createdAt),
+      createdAt: notification.createdAt.toDateString(),
     }
   },
 }

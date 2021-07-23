@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
 const Client = require("../../../models/Client")
+const Payment = require("../../../models/Payment")
+
 const {
   registerValidation,
   emailValidation,
@@ -11,6 +13,7 @@ const {
   passwordPattern_1,
   passwordPattern_2,
   generateError,
+  newDate,
 } = require("../../../utils/constants")
 const { FORGOT_PASSWORD_TOKEN } = require("../../../utils/keys")
 
@@ -38,6 +41,13 @@ module.exports = {
         ...client,
         password: hashedPassword,
         active: true,
+      }).save()
+
+      await new Payment({
+        clientId: newClient._id,
+        paid: true,
+        refund: 0,
+        expryDate: newDate(new Date(), 15),
       }).save()
 
       return clientReducer(newClient)

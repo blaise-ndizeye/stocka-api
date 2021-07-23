@@ -7,7 +7,6 @@ const PaymentSchema = new mongoose.Schema({
   },
   paid: {
     type: Boolean,
-    required: true,
     default: true,
   },
   expryDate: {

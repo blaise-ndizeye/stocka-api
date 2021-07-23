@@ -11,7 +11,11 @@ const AdminSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: true
+    required: true,
+  },
+  gender: {
+    type: String,
+    required: true,
   },
   password: {
     type: String,
@@ -20,6 +24,10 @@ const AdminSchema = new mongoose.Schema({
   role: {
     type: String,
     default: "ADMIN",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
   },
 })
 

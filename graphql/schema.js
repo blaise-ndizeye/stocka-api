@@ -113,7 +113,9 @@ const typeDefs = gql`
     username: String!
     email: String!
     phone: String!
+    gender: String!
     role: String!
+    createdAt: String!
   }
 
   type ProductRecord {
@@ -313,6 +315,7 @@ const typeDefs = gql`
       clientId: ID!
       oldPassword: String!
       newPassword: String!
+      confirmPassword: String!
     ): Client!
     ResetPassword(
       "Reseting the password by sending the token and the new password"
@@ -361,20 +364,20 @@ const typeDefs = gql`
       adminId: ID!
       username: String!
       password: String!
-    ): Client!
+    ): Admin!
     AdminUpdateEmail(
       "Updating the admin email using his/her password and the clientId"
       adminId: ID!
       email: String!
       password: String!
-    ): Client!
+    ): Admin!
     AdminUpdatePassword(
       "Updating the admin password using his/her old password and the clientId"
       adminId: ID!
       oldPassword: String!
       newPassword: String!
       confirmPassword: String!
-    ): Client!
+    ): Admin!
   }
 `
 

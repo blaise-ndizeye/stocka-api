@@ -44,7 +44,9 @@ module.exports = {
       username: admin.username,
       email: admin.email,
       phone: admin.phone,
+      gender: admin.gender,
       role: admin.role,
+      createdAt: JSON.stringify(admin.createdAt),
     }
   },
   notificationReducer(notification) {
@@ -53,7 +55,7 @@ module.exports = {
       admin: notification.adminId,
       client: notification.clientId,
       message: notification.message,
-      createdAt: notification.createdAt,
+      createdAt: JSON.stringify(notification.createdAt),
     }
   },
 }

@@ -8,6 +8,7 @@ const Payment = require("../../../models/Payment")
 const {
   adminValidation,
   notificationValidation,
+  emailValidation,
 } = require("../../../helpers/validations")
 const { adminReducer } = require("../../../helpers/reducers")
 const {
@@ -18,10 +19,16 @@ const {
 module.exports = {
   RegisterAdmin: async (_, { admin }) => {
     try {
-      const { name, email, phone, password, confirmPassword } = admin
+      const { name, email, phone, gender, password, confirmPassword } = admin
       passwordValidation({ password, confirmPassword })
 
-      const { error } = adminValidation({ name, email, phone, password })
+      const { error } = adminValidation({
+        name,
+        email,
+        phone,
+        gender,
+        password,
+      })
       if (error) generateError(error.details[0].message)
 
       const adminExists = await Admin.findOne({ email })
@@ -34,6 +41,7 @@ module.exports = {
         username: name,
         email,
         phone,
+        gender,
         password: hashedPassword,
       }).save()
       return adminReducer(newAdmin)
@@ -250,20 +258,13 @@ module.exports = {
       const { adminId: admin, isLoggedIn, message } = await secure
       if (!isLoggedIn || admin !== adminId) generateError(message)
 
-      const adminExists = await Client.findOne({ _id: adminId })
+      const adminExists = await Admin.findOne({ _id: adminId })
       if (!adminExists) generateError(message)
 
       if (typeof username !== "string" || username.length < 3)
         generateError("Username must be valid and have minimum length of three")
 
-      if (!password || password.length < 6)
-        generateError("Password must have at least six characters")
-
-      if (
-        !passwordPattern_1.test(password) ||
-        !passwordPattern_2.test(password)
-      )
-        generateError("Password must contain numbers and letters")
+      passwordValidation({ password, confirmPassword: password })
 
       const passwordMatch = await bcrypt.compare(password, adminExists.password)
       if (!passwordMatch) generateError("Invalid Password")
@@ -297,7 +298,7 @@ module.exports = {
       if (!passwordMatch) generateError("Invalid Password")
 
       await Admin.updateOne(
-        { _id: clientId },
+        { _id: adminId },
         {
           $set: {
             email,
@@ -322,16 +323,7 @@ module.exports = {
       const adminExists = await Admin.findOne({ _id: adminId })
       if (!adminExists) generateError(message)
 
-      if (newPassword !== confirmPassword)
-        generateError("New password must equal to Confirm password")
-      if (!newPassword || newPassword.length < 6)
-        generateError("Password must have at least six characters")
-
-      if (
-        !passwordPattern_1.test(newPassword) ||
-        !passwordPattern_2.test(newPassword)
-      )
-        generateError("Password must contain numbers and letters")
+      passwordValidation({ password: newPassword, confirmPassword })
 
       const passwordMatch = await bcrypt.compare(
         oldPassword,

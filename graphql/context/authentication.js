@@ -34,7 +34,8 @@ module.exports = async (req) => {
       clientId: client.id,
       active: client.active,
       isLoggedIn: true,
-      message: "Access granted",
+      message:
+        "Access granted: make sure about the client credentials being used",
     }
   } catch (e) {
     return {

@@ -27,7 +27,8 @@ module.exports = async (req) => {
     return {
       adminId: admin.id,
       isLoggedIn: true,
-      message: "Access granted",
+      message:
+        "Access granted: make sure about the admin credentials being used",
     }
   } catch (e) {
     return {

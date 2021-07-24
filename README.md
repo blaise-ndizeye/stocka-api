@@ -199,7 +199,6 @@ mutation (
   $phone: String!
   $password: String!
   $confirmPassword: String!
-  $role: Role!
   $gender: String!
 ) {
   RegisterClient(
@@ -209,7 +208,6 @@ mutation (
       phone: $phone
       password: $password
       confirmPassword: $confirmPassword
-      role: $role
       gender: $gender
     }
   ) {
@@ -467,52 +465,27 @@ mutation ($records: [ID!]!, $clientId: ID!) {
 }
 ```
 
-- UpdateUsername :
-
-```graphql
-mutation ($clientId: ID!, $username: String!, $password: String!) {
-  UpdateUsername(
-    clientId: $clientId
-    username: $username
-    password: $password
-  ) {
-    clientId
-    username
-    email
-    phone
-    role
-    active
-    gender
-    createdAt
-    shortTermProducts {
-      name
-      buyingPrice
-    }
-    longTermProducts {
-      name
-      buyingPrice
-    }
-    shortTermProductRecords {
-      name
-      buyingPrice
-      sellingPrice
-    }
-    longTermProductRecords {
-      name
-      buyingPrice
-      sellingPrice
-    }
-  }
-}
-```
-
 > When querying a `client` object type there is nested objects on it as they can be returned above and this can be applied everywhere you find this `client` object
 
-- UpdateEmail :
+- UpdateCredentials :> `Here it's all about updating user credentials except password`
 
 ```graphql
-mutation ($clientId: ID!, $email: String!, $password: String!) {
-  UpdateEmail(clientId: $clientId, email: $email, password: $password) {
+mutation (
+  $clientId: ID!
+  $username: String!
+  $email: String!
+  $phone: String!
+  $gender: String!
+  $password: String!
+) {
+  UpdateEmail(
+    clientId: $clientId
+    username: $username
+    email: $email
+    phone: $phone
+    gender: $gender
+    password: $password
+  ) {
     clientId
     username
     email

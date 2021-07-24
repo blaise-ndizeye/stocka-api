@@ -28,7 +28,6 @@ module.exports = {
 
       if (clientExists) generateError("User already exists")
       const { error } = registerValidation(client)
-
       if (password !== confirmPassword)
         generateError("Both passwords must be the same")
       if (error) generateError(error.details[0].message)
@@ -58,7 +57,11 @@ module.exports = {
       throw e
     }
   },
-  UpdateUsername: async (_, { clientId, username, password }, { auth }) => {
+  UpdateCredentials: async (
+    _,
+    { clientId, username, email, phone, gender, password },
+    { auth }
+  ) => {
     try {
       const { clientId: client, isLoggedIn, message } = await auth
       if (!isLoggedIn || client !== clientId) generateError(message)
@@ -66,47 +69,14 @@ module.exports = {
       const clientExists = await Client.findOne({ _id: clientId })
       if (!clientExists) generateError(message)
 
-      if (typeof username !== "string" || username.length < 3)
-        generateError("Username must be valid and have minimum length of three")
-
-      if (!password || password.length < 6)
-        generateError("Password must have at least six characters")
-
-      if (
-        !passwordPattern_1.test(password) ||
-        !passwordPattern_2.test(password)
-      )
-        generateError("Password must contain numbers and letters")
-
-      const passwordMatch = await bcrypt.compare(
+      const { error } = registerValidation({
+        username,
+        email,
+        phone,
+        gender,
         password,
-        clientExists.password
-      )
-      if (!passwordMatch) generateError("Invalid Password")
-
-      await Client.updateOne(
-        { _id: clientId },
-        {
-          $set: {
-            username,
-          },
-        }
-      )
-      const updatedClient = await Client.findOne({ _id: clientId })
-      return clientReducer(updatedClient)
-    } catch (e) {
-      throw e
-    }
-  },
-  UpdateEmail: async (_, { clientId, email, password }, { auth }) => {
-    try {
-      const { clientId: client, isLoggedIn, message } = await auth
-      if (!isLoggedIn || client !== clientId) generateError(message)
-
-      const clientExists = await Client.findOne({ _id: clientId })
-      if (!clientExists) generateError(message)
-
-      const { error } = emailValidation({ email })
+        confirmPassword: password,
+      })
       if (error) generateError(error.details[0].message)
 
       const passwordMatch = await bcrypt.compare(
@@ -119,7 +89,10 @@ module.exports = {
         { _id: clientId },
         {
           $set: {
+            username,
             email,
+            phone,
+            gender,
           },
         }
       )

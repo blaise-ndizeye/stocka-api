@@ -20,7 +20,6 @@ const typeDefs = gql`
     phone: String!
     password: String!
     confirmPassword: String!
-    role: Role!
     gender: String!
   }
 
@@ -86,19 +85,13 @@ const typeDefs = gql`
     client: Client!
   }
 
-  enum Role {
-    "The values must be between the below ones"
-    USER
-    ADMIN
-  }
-
   type Client {
     "the fields for the the client or current user of the app and they include the nested queries"
     clientId: ID!
     username: String!
     email: String!
     phone: String!
-    role: Role!
+    role: String!
     active: Boolean!
     gender: String!
     createdAt: String!
@@ -338,16 +331,13 @@ const typeDefs = gql`
       records: [ID!]!
       clientId: ID!
     ): DeleteSelectedRecordsResponse!
-    UpdateUsername(
-      "Updating the client username using his/her password and the clientId"
+    UpdateCredentials(
+      "Updating the client credentials using his/her password and the clientId"
       clientId: ID!
       username: String!
-      password: String!
-    ): Client!
-    UpdateEmail(
-      "Updating the client email using his/her password and the clientId"
-      clientId: ID!
       email: String!
+      phone: String!
+      gender: String!
       password: String!
     ): Client!
     UpdatePassword(
@@ -405,7 +395,7 @@ const typeDefs = gql`
       confirmPassword: String!
     ): ForgotPasswordResponse!
     AdminUpdateCredentials(
-      "Updating the admin email using his/her password and the clientId"
+      "Updating the admin credentials using his/her password and the clientId"
       adminId: ID!
       username: String!
       email: String!

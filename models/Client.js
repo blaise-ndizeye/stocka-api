@@ -15,7 +15,6 @@ const ClientSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    required: true,
     default: "User",
   },
   active: {

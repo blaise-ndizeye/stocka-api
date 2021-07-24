@@ -404,16 +404,13 @@ const typeDefs = gql`
       newPassword: String!
       confirmPassword: String!
     ): ForgotPasswordResponse!
-    AdminUpdateUsername(
-      "Updating the admin username using his/her password and the clientId"
-      adminId: ID!
-      username: String!
-      password: String!
-    ): Admin!
-    AdminUpdateEmail(
+    AdminUpdateCredentials(
       "Updating the admin email using his/her password and the clientId"
       adminId: ID!
+      username: String!
       email: String!
+      phone: String!
+      gender: String!
       password: String!
     ): Admin!
     AdminUpdatePassword(

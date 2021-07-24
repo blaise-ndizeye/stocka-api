@@ -269,9 +269,9 @@ module.exports = {
       throw e
     }
   },
-  AdminUpdateUsername: async (
+  AdminUpdateCredentials: async (
     _,
-    { adminId, username, password },
+    { adminId, username, phone, gender, email, password },
     { secure }
   ) => {
     try {
@@ -281,37 +281,17 @@ module.exports = {
       const adminExists = await Admin.findOne({ _id: adminId })
       if (!adminExists) generateError(message)
 
-      if (typeof username !== "string" || username.length < 3)
-        generateError("Username must be valid and have minimum length of three")
-
-      passwordValidation({ password, confirmPassword: password })
-
-      const passwordMatch = await bcrypt.compare(password, adminExists.password)
-      if (!passwordMatch) generateError("Invalid Password")
-
-      await Admin.updateOne(
-        { _id: adminId },
-        {
-          $set: {
-            username,
-          },
-        }
-      )
-      const updatedAdmin = await Admin.findOne({ _id: adminId })
-      return adminReducer(updatedAdmin)
-    } catch (e) {
-      throw e
-    }
-  },
-  AdminUpdateEmail: async (_, { adminId, email, password }, { secure }) => {
-    try {
-      const { adminId: admin, isLoggedIn, message } = await secure
-      if (!isLoggedIn || admin !== adminId) generateError(message)
-
-      const adminExists = await Admin.findOne({ _id: adminId })
-      if (!adminExists) generateError(message)
-
-      const { error } = emailValidation({ email })
+      if (email === adminAccRecover.email)
+        generateError("The email specified is not allowed")
+      if (adminExists.email === adminAccRecover.email)
+        generateError("Failed to update the account credentials")
+      const { error } = adminValidation({
+        name: username,
+        phone,
+        email,
+        gender,
+        password,
+      })
       if (error) generateError(error.details[0].message)
 
       const passwordMatch = await bcrypt.compare(password, adminExists.password)
@@ -321,7 +301,10 @@ module.exports = {
         { _id: adminId },
         {
           $set: {
+            username,
             email,
+            phone,
+            gender,
           },
         }
       )

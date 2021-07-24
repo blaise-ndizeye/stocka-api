@@ -3,14 +3,18 @@ const bcrypt = require("bcrypt")
 
 const Client = require("../../../models/Client")
 const Notification = require("../../../models/Notification")
+const Payment = require("../../../models/Payment")
 
 const {
   loginValidation,
   emailValidation,
 } = require("../../../helpers/validations")
+const {
+  notificationReducer,
+  paymentReducer,
+} = require("../../../helpers/reducers")
 const { generateError } = require("../../../utils/constants")
 const sendMail = require("../../../utils/mailClient")
-const { notificationReducer } = require("../../../helpers/reducers")
 const { TOKEN_SECRET, FORGOT_PASSWORD_TOKEN } = require("../../../utils/keys")
 
 module.exports = {
@@ -77,6 +81,17 @@ module.exports = {
       return notifications.map((notification) =>
         notificationReducer(notification)
       )
+    } catch (e) {
+      throw e
+    }
+  },
+  PaymentStatus: async (_, { clientId }, { auth }) => {
+    try {
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
+
+      const paymentStatus = await Payment.findOne({ clientId })
+      return paymentReducer(paymentStatus)
     } catch (e) {
       throw e
     }

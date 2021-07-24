@@ -232,6 +232,10 @@ const typeDefs = gql`
       "Get all notifications sent to the client by the admin all types"
       clientId: ID!
     ): [Notification!]!
+    PaymentStatus(
+      "Get the status of payment of the user"
+      clientId: ID!
+    ): Payment!
     ForgotPassword(
       "Once the client forgot password he/she will send the email and send the link to the front-end which will get the data in parameters and send them to the server to update the password"
       email: String!

@@ -7,7 +7,7 @@ const Mutation = require("./graphql/resolvers/mutation")
 const Context = require("./graphql/context")
 const NestedQueries = require("./graphql/resolvers/query/nestedQueries")
 const connectDB = require("./utils/db")
-const traceClients = require("./helpers/traceClients")
+const { traceClients, traceProducts } = require("./helpers/traceClients")
 
 connectDB()
 
@@ -26,6 +26,7 @@ server
   .then(({ url }) => {
     console.log(`🚀 Server is ready at ${url}`)
     traceClients()
+    traceProducts()
   })
   .catch((e) => {
     console.error(`Error occured: ${e}`)

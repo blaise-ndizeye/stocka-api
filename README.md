@@ -1070,6 +1070,23 @@ mutation (
 }
 ```
 
+- ToggleClientActivation:> `Toggling the active property on clients if the client has not paid or not active`
+
+```graphql
+mutation ($adminId: ID!, $clientId: ID!) {
+  ToggleClientActivation(adminId: $adminId, clientId: $clientId) {
+    success
+    message
+    client {
+      clientId
+      email
+      username
+      active
+    }
+  }
+}
+```
+
 - AdminDeleteAccount:
 
 ```graphql

@@ -13,6 +13,12 @@ const typeDefs = gql`
     admin: Admin!
   }
 
+  type ActivationResponse {
+    success: Boolean!
+    message: String!
+    client: Client!
+  }
+
   input ClientCreds {
     "The input fields required for registering the user"
     username: String!
@@ -432,6 +438,7 @@ const typeDefs = gql`
       adminId: ID!
       premiumId: ID!
     ): PremiumCostResponse!
+    ToggleClientActivation(adminId: ID!, clientId: ID!): ActivationResponse!
     AdminDeleteAccount(
       "⚠️ To delete this account will set the admin with:=> email: admin@stocka.com, password: admin1@graph"
       adminId: ID!

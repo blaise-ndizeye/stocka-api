@@ -35,4 +35,7 @@ module.exports = {
   Payment: {
     client: (parent) => findClient(parent),
   },
+  ActivationResponse: {
+    client: (parent) => findClient(parent),
+  },
 }

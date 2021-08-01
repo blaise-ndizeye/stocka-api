@@ -425,6 +425,35 @@ module.exports = {
       throw e
     }
   },
+  ToggleClientActivation: async (_, { adminId, clientId }, { secure }) => {
+    try {
+      const { adminId: admin, isLoggedIn, message } = await secure
+      if (!isLoggedIn || admin !== adminId) generateError(message)
+
+      const client = await Client.findOne({ _id: clientId })
+      const payment = await Payment.findOne({ clientId })
+
+      if (!client) generateError("Client doesn't exist")
+      if (payment.paid && client.active)
+        generateError("Failed to deactivate the paid client")
+
+      await Client.updateOne(
+        { _id: clientId },
+        {
+          $set: {
+            active: !client.active,
+          },
+        }
+      )
+      return {
+        success: true,
+        message: "The client activation toggled successfully",
+        client: clientId,
+      }
+    } catch (e) {
+      throw e
+    }
+  },
   AdminDeleteAccount: async (_, { adminId, confirmPassword }, { secure }) => {
     try {
       const { adminId: admin, isLoggedIn, message } = await secure

@@ -21,6 +21,8 @@ It includes two graphql operations including `mutations, queries` and `Authoriza
 
 ###### CLIENT_URL="https://example.com"
 
+###### ADMIN_URL="https://example.com"
+
 #### Explanation of the above variables:
 
 ###### `MONGO_URL`: the database url and it is recommended to be the MONGO DB Url and that one is an example of connecting to a local server
@@ -33,7 +35,9 @@ It includes two graphql operations including `mutations, queries` and `Authoriza
 
 ###### `PASS`: the password for the above email
 
-###### `CLIENT_URL`: the root link pointing to the client in which the server is serving to be used when reseting the password for the user
+###### `CLIENT_URL`: the root link pointing to the client app in which the server is serving to be used when reseting the password for the user
+
+###### `ADMIN_URL`: the root link pointing to the admin app in which the server is serving to be used when reseting the password for the user
 
 `After entering the above environment variables in the .env file then in the terminal in the current folder run:`
 

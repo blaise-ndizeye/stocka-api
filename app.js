@@ -7,7 +7,7 @@ const Mutation = require("./graphql/resolvers/mutation")
 const Context = require("./graphql/context")
 const NestedQueries = require("./graphql/resolvers/query/nestedQueries")
 const connectDB = require("./utils/db")
-const { traceClients, traceProducts } = require("./helpers/traceClients")
+const { traceClients, traceProducts } = require("./helpers/traceModels")
 
 connectDB()
 

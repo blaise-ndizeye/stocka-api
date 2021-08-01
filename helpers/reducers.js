@@ -52,7 +52,7 @@ module.exports = {
   notificationReducer(notification) {
     return {
       notificationId: notification._id,
-      admin: notification.adminId,
+      source: notification.source,
       client: notification.clientId,
       message: notification.message,
       createdAt: notification.createdAt.toGMTString(),

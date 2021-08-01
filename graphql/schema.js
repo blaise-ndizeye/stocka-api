@@ -130,7 +130,7 @@ const typeDefs = gql`
     "The fields to be returned for the notification to the client"
     notificationId: ID!
     client: Client!
-    admin: Admin!
+    source: String!
     message: String!
     createdAt: String!
   }

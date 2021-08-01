@@ -166,6 +166,76 @@ query ($clientId: ID!) {
 }
 ```
 
+- Notifications:> `All Notifications for the buyer will be returned by this query`
+
+```graphql
+query ($clientId: ID!) {
+  Notifications(clientId: $clientId) {
+    notificationId
+    source
+    message
+    createdAt
+    client {
+      clientId
+      email
+      username
+    }
+  }
+}
+```
+
+- AllPremiums:> `All premium costs to be chosen by the client when paying for the next premium and this can be used by both admin and the client`
+
+**For Client:**
+
+```graphql
+query (
+  $clientId: ID
+){
+  AllPremiums(
+    clientId: $clientId
+  ){
+    premiumId
+    amountPaid
+    duration
+    createdAt
+
+```
+
+**For Admin:** `⚠️ Once you start working on admin section remember about this query`
+
+```graphql
+query (
+  $adminId: ID
+){
+  AllPremiums(
+    adminId: $adminId
+  ){
+    premiumId
+    amountPaid
+    duration
+    createdAt
+
+```
+
+- PaymentStatus: `This will show the payment status for the client`
+
+```graphql
+query ($clientId: ID!) {
+  PaymentStatus(clientId: $clientId) {
+    paymentId
+    client {
+      clientId
+      email
+      username
+    }
+    paid
+    expryDate
+    refund
+  }
+}
+```
+
 - ForgotPassword :> `By this query will send the link to the email of the user if it was already registered and also already registered to Gmail client this means which is like this: *****@gmail.com but this issue will be fixed in the future`
 
 ```graphql
@@ -579,4 +649,4 @@ mutation ($token: String!, $newPassword: String!, $confirmPassword: String!) {
 
 ---
 
-> That's all about user/client queries and mutations but its not over because there is also the `admin` portion but it will come in future... once finished this documentation will be updated to include it. `Notice that this api will include the payment system which will also be controlled by admin which will be fully explained in the future.`
+> That's all about user/client queries and mutations but it there is one more thing left about paying:=> Usually using `MTN` but there is a bug in that online service we are waiting for fixes

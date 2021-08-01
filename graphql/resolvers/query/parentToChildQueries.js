@@ -30,7 +30,6 @@ module.exports = {
     longTermProductRecords: (parent) => longTermProductsRecords(parent),
   },
   Notification: {
-    admin: (parent) => findAdmin(parent),
     client: (parent) => findClient(parent),
   },
   Payment: {

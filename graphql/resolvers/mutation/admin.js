@@ -82,14 +82,14 @@ module.exports = {
         let clientObj = clients[i]
         let notifications = await Notification.find({
           $and: [
-            { adminId },
+            { source: "ADMIN" },
             { message: notification },
             { clientId: clientObj._id },
           ],
         })
         if (notifications.length > 0) continue
         await new Notification({
-          adminId,
+          source: "ADMIN",
           clientId: clientObj._id,
           message: notification,
         }).save()
@@ -125,14 +125,14 @@ module.exports = {
 
         let notifications = await Notification.find({
           $and: [
-            { adminId },
+            { source: "ADMIN" },
             { message: notification },
             { clientId: clientObjId },
           ],
         })
         if (notifications.length > 0) continue
         await new Notification({
-          adminId,
+          source: "ADMIN",
           clientId: clientObjId,
           message: notification,
         }).save()
@@ -168,14 +168,14 @@ module.exports = {
 
         let notifications = await Notification.find({
           $and: [
-            { adminId },
+            { source: "ADMIN" },
             { message: notification },
             { clientId: clientObjId },
           ],
         })
         if (notifications.length > 0) continue
         await new Notification({
-          adminId,
+          source: "ADMIN",
           clientId: clientObjId,
           message: notification,
         }).save()
@@ -206,12 +206,12 @@ module.exports = {
       if (error) generateError(error.details[0].message)
 
       let notificationExist = await Notification.find({
-        $and: [{ adminId }, { message: notification }, { clientId }],
+        $and: [{ source: "ADMIN" }, { message: notification }, { clientId }],
       })
       if (notificationExist.length > 0)
         generateError("The notification being sent already exists")
       await new Notification({
-        adminId,
+        source: "ADMIN",
         clientId,
         message: notification,
       }).save()

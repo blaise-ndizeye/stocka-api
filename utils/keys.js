@@ -5,7 +5,8 @@ const {
   EMAIL,
   PASS,
   CLIENT_URL,
-  ADMIN_SECRET
+  ADMIN_URL,
+  ADMIN_SECRET,
 } = process.env
 module.exports = {
   MONGO_URL,
@@ -14,5 +15,6 @@ module.exports = {
   EMAIL,
   PASS,
   CLIENT_URL,
-  ADMIN_SECRET
+  ADMIN_SECRET,
+  ADMIN_URL,
 }

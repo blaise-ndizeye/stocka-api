@@ -49,7 +49,9 @@ module.exports = {
       const { adminId: admin, isLoggedIn, message } = await secure
       if (!isLoggedIn || admin !== adminId) generateError(message)
 
-      const notifications = await Notification.find().sort({ _id: -1 })
+      const notifications = await Notification.find({ source: "ADMIN" }).sort({
+        _id: -1,
+      })
       return notifications.map((notification) =>
         notificationReducer(notification)
       )

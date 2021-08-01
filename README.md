@@ -47,16 +47,20 @@ npm install
 node app
 ```
 
+> This api contains `Admin section` and `Client section`
+
 ---
+
+### For Client:
 
 > **Query operations** :>
 > `By using the below queries pay attention to the declaration variables.`
 
 ###### Every request to the server will require the authorization header with the following key values except `LoginClient` query and `ForgotPassword` query:
 
-`Authorization:` `Bearer token`
+`Authorization:` `Bearer token-value`
 
-The `token` specifies the one returned by the `LoginClient query` and is valid for 3 days
+The `token-value` specifies the one returned by the `LoginClient query` and is valid for 3 days
 
 - LoginClient :
 
@@ -256,9 +260,9 @@ query ($email: String!) {
 
 ###### Every request to the server will require the authorization header with the following key values except `RegisterClient` mutation and `ResetPassword` mutation even though this `ResetPassword` mutation will need the token in its arguments:
 
-`Authorization:` `Bearer token`
+`Authorization:` `Bearer token-value`
 
-The `token` specifies the one returned by the `LoginClient query` and is valid for 3 days
+The `token-value` specifies the one returned by the `LoginClient query` and is valid for 3 days
 
 - RegisterClient :> `Please respect how the variables are declared by the query if you find any bug find the correction in the docs loaded from the server by your tool`
 
@@ -647,6 +651,435 @@ mutation ($token: String!, $newPassword: String!, $confirmPassword: String!) {
 }
 ```
 
+- DeleteAccount:> `Once the account is deleted all the data related to that client is lost`
+
+```graphql
+mutation ($clientId: ID!, $confirmPassword: String!) {
+  DeleteAccount(clientId: $clientId, confirmPassword: $confirmPassword) {
+    success
+    message
+    accountId
+  }
+}
+```
+
 ---
 
 > That's all about user/client queries and mutations but it there is one more thing left about paying:=> Usually using `MTN` but there is a bug in that online service we are waiting for fixes
+
+---
+
+### For Admin:
+
+> **Query operations** :>
+> `By using the below queries pay attention to the declaration variables.`
+
+###### Every request to the server will require the authorization header with the following key values except `LoginAdmin` query and `AdminForgotPassword` query
+
+`Security:` `Bearer token-value`
+
+The `token-value` specifies the one returned by the `LoginAdmin query` and is valid for 1 day
+
+- LoginAdmin:
+
+```graphql
+query ($email: String!, $password: String!) {
+  LoginAdmin(email: $email, password: $password) {
+    token
+    admin {
+      adminId
+      username
+      email
+      role
+    }
+  }
+}
+```
+
+- AllShortTermProducts:
+
+```graphql
+query ($adminId: ID!) {
+  AllShortTermProducts(adminId: $adminId) {
+    productId
+    name
+    buyingPrice
+    amount
+    pricePerUnit
+    dateOfEntry
+    description
+    dateOfExpry
+    client {
+      clientId
+      email
+      username
+    }
+  }
+}
+```
+
+- AllLongTermProducts:
+
+```graphql
+query ($adminId: ID!) {
+  AllLongTermProducts(adminId: $adminId) {
+    productId
+    name
+    buyingPrice
+    amount
+    pricePerUnit
+    dateOfEntry
+    description
+    client {
+      clientId
+      email
+      username
+    }
+  }
+}
+```
+
+- AllShortTermProductRecords:
+
+```graphql
+query ($adminId: ID!) {
+  AllShortTermProductRecords(adminId: $adminId) {
+    recordId
+    name
+    buyingPrice
+    amount
+    dateRecorded
+    dateOfEntry
+    description
+    client {
+      clientId
+      email
+      username
+    }
+  }
+}
+```
+
+- AllLongTermProductRecords:
+
+```graphql
+query ($adminId: ID!) {
+  AllLongTermProductRecords(adminId: $adminId) {
+    recordId
+    name
+    buyingPrice
+    amount
+    dateRecorded
+    dateOfEntry
+    description
+    client {
+      clientId
+      email
+      username
+    }
+  }
+}
+```
+
+- AllNotifications:
+
+```graphql
+query ($adminId: ID!) {
+  AllNotifications(adminId: $adminId) {
+    notificationId
+    message
+    createdAt
+    source
+    client {
+      clientId
+      email
+      username
+    }
+  }
+}
+```
+
+- AllPayments:
+
+```graphql
+query ($adminId: ID!) {
+  AllPayments(adminId: $adminId) {
+    paymentId
+    paid
+    expryDate
+    refund
+    client {
+      clientId
+      email
+      username
+    }
+  }
+}
+```
+
+- AllPremiums: `This query is found in CLIENT section`
+
+* AdminForgotPassword: `Just like the CLIENT the logic is the same`
+
+```graphql
+query ($email: String!) {
+  AdminForgotPassword(email: $email) {
+    success
+    email
+    message
+  }
+}
+```
+
+---
+
+> Mutation operations :> `Also pay attention with the variables declaration and almost all variables are very well validated before making any effect to the data stored in the database.`
+
+###### Every request to the server will require the authorization header with the following key values except `RegisterAdmin` mutation and `AdminResetPassword` mutation even though this `AdminResetPassword` mutation will need the token in its arguments:
+
+`Security:` `Bearer token-value`
+
+The `token-value` specifies the one returned by the `LoginAdmin query` and is valid for 2 days
+
+- RegisterAdmin:> `Only one admin is registered in the app`
+
+```graphql
+mutation (
+  $name: String!
+  $email: String!
+  $phone: String!
+  $gender: String!
+  $password: String!
+  $confirmPassword: String!
+) {
+  RegisterAdmin(
+    admin: {
+      name: $name
+      email: $email
+      phone: $phone
+      gender: $gender
+      password: $password
+      confirmPassword: $confirmPassword
+    }
+  ) {
+    adminId
+    username
+    email
+    phone
+    gender
+    role
+  }
+}
+```
+
+- NotifyAllClients:
+
+```graphql
+mutation ($adminId: ID!, $message: String!) {
+  NotifyAllClients(adminId: $adminId, message: $message) {
+    admin {
+      username
+      email
+    }
+    message
+    success
+  }
+}
+```
+
+- NotifyOneClient:
+
+```graphql
+mutation ($adminId: ID!, $clientId: ID!, $message: String!) {
+  NotifyOneClient(adminId: $adminId, message: $message, clientId: $clientId) {
+    success
+    message
+    admin {
+      username
+      email
+    }
+  }
+}
+```
+
+- NotifyPaidClients:
+
+```graphql
+mutation ($adminId: ID!, $message: String!) {
+  NotifyPaidClients(adminId: $adminId, message: $message) {
+    message
+    success
+    admin {
+      username
+      email
+    }
+  }
+}
+```
+
+- NotifyUnpaidClients:
+
+```graphql
+mutation ($adminId: ID!, $message: String!) {
+  NotifyUnpaidClients(adminId: $adminId, message: $message) {
+    admin {
+      username
+      email
+    }
+    message
+    success
+  }
+}
+```
+
+- DeleteNotification:
+
+```graphql
+mutation ($adminId: ID!, $notificationId: ID!) {
+  DeleteNotification(adminId: $adminId, notificationId: $notificationId) {
+    success
+    message
+    notificationId
+  }
+}
+```
+
+- AdminSetCost: `By here the admin can set the premium cost to be paid by clients for using his app if that cost doesn't exist`
+
+###### NB: the duration is expressed in floating numbers in range of [1-12] representing the months.
+
+`For example: 1-month ==> duration = 1 ; 2-weeks ==> duration = 0.5`
+
+```graphql
+mutation ($adminId: ID!, $premiumCost: Float!, $duration: Float!) {
+  AdminSetCost(
+    adminId: $adminId
+    premiumCost: $premiumCost
+    duration: $duration
+  ) {
+    success
+    message
+    premiumId
+  }
+}
+```
+
+- AdminUpdateCost:
+
+```graphql
+mutation (
+  $adminId: ID!
+  $premiumId: ID!
+  $newPremiumCost: Float!
+  $newDuration: Float!
+) {
+  AdminUpdateCost(
+    adminId: $adminId
+    premiumId: $premiumId
+    newPremiumCost: $newPremiumCost
+    newDuration: $newDuration
+  ) {
+    success
+    message
+    premiumId
+  }
+}
+```
+
+- AdminDeleteCost:
+
+```graphql
+mutation ($adminId: ID!, $premiumId: ID!) {
+  AdminDeleteCost(adminId: $adminId, premiumId: $premiumId) {
+    success
+    message
+    premiumId
+  }
+}
+```
+
+- AdminResetPassword:
+
+```graphql
+mutation ($token: String!, $newPassword: String!, $confirmPassword: String!) {
+  AdminResetPassword(
+    token: $token
+    newPassword: $newPassword
+    confirmPassword: $confirmPassword
+  ) {
+    success
+    email
+    message
+  }
+}
+```
+
+- AdminUpdateCredentials:
+
+```graphql
+mutation (
+  $adminId: ID!
+  $username: String!
+  $email: String!
+  $phone: String!
+  $gender: String!
+  $password: String!
+) {
+  AdminUpdateCredentials(
+    adminId: $adminId
+    username: $username
+    email: $email
+    phone: $phone
+    gender: $gender
+    password: $password
+  ) {
+    adminId
+    username
+    email
+    phone
+    gender
+    role
+    createdAt
+  }
+}
+```
+
+- AdminUpdatePassword:
+
+```graphql
+mutation (
+  $adminId: ID!
+  $oldPassword: String!
+  $newPassword: String!
+  $confirmPassword: String!
+) {
+  AdminUpdatePassword(
+    adminId: $adminId
+    oldPassword: $oldPassword
+    newPassword: $newPassword
+    confirmPassword: $confirmPassword
+  ) {
+    adminId
+    username
+    email
+    phone
+    gender
+    role
+    createdAt
+  }
+}
+```
+
+- AdminDeleteAccount:
+
+```graphql
+mutation ($adminId: ID!, $confirmPassword: String!) {
+  AdminDeleteAccount(adminId: $adminId, confirmPassword: $confirmPassword) {
+    success
+    message
+    accountId
+  }
+}
+```
+
+###### NB: When the admin is deleted the new Admin properties can be found in the following path in the source code: `./utils/constants` in the object called: `adminAccRecover`

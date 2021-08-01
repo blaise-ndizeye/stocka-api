@@ -1,10 +1,11 @@
 const nodemailer = require("nodemailer")
 
-const { EMAIL, PASS, CLIENT_URL } = require("./keys")
+const { EMAIL, PASS, CLIENT_URL, ADMIN_URL } = require("./keys")
 
 const sendMail = async (data) => {
   try {
     let { emailTo, resetToken, userType } = data
+    const hostUrl = userType === "admin" ? ADMIN_URL : CLIENT_URL
 
     let mailTransporter = nodemailer.createTransport({
       service: "gmail",
@@ -25,7 +26,7 @@ const sendMail = async (data) => {
         <p><strong>If you find any issue about our services please mail us: </strong></p>
         <h4><a href = "mailto: khalifablaise@gmail.com">@stocka.api</a></h4>
         <br/><br/>
-        <h3><a style="padding: 15px; font-size=50px" href = "${CLIENT_URL}/${userType}/reset_password/${resetToken}">Click to reset your password</a></h3>
+        <h3><a style="padding: 15px; font-size=50px" href = "${hostUrl}/reset_password/${resetToken}">Click to reset your password</a></h3>
         </div>        
         `,
     }

@@ -363,6 +363,11 @@ const typeDefs = gql`
       newPassword: String!
       confirmPassword: String!
     ): ForgotPasswordResponse!
+    DeleteNotification(
+      "Delete the notification once needed by the client but the one which is not from Admin"
+      clientId: ID!
+      notificationId: ID!
+    ): DeleteNotificationResponse!
     DeleteAccount(
       "Deleting the account by the user which will completely remove him from the database"
       clientId: ID!
@@ -393,7 +398,7 @@ const typeDefs = gql`
       clientId: ID!
       message: String!
     ): NotifyResponse!
-    DeleteNotification(
+    AdminDeleteNotification(
       "Delete the notification once needed by the admin"
       adminId: ID!
       notificationId: ID!

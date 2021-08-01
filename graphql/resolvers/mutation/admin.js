@@ -225,7 +225,7 @@ module.exports = {
       throw e
     }
   },
-  async DeleteNotification(_, { adminId, notificationId }, { secure }) {
+  async AdminDeleteNotification(_, { adminId, notificationId }, { secure }) {
     try {
       const { adminId: admin, isLoggedIn, message } = await secure
       if (!isLoggedIn || admin !== adminId) generateError(message)

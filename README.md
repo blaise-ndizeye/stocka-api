@@ -651,6 +651,18 @@ mutation ($token: String!, $newPassword: String!, $confirmPassword: String!) {
 }
 ```
 
+- DeleteNotification:> `The notification can be deleted by the client except the one from ADMIN`
+
+```graphql
+mutation ($clientId: ID!, $notificationId: ID!) {
+  DeleteNotification(clientId: $clientId, notificationId: $notificationId) {
+    success
+    message
+    notificationId
+  }
+}
+```
+
 - DeleteAccount:> `Once the account is deleted all the data related to that client is lost`
 
 ```graphql
@@ -932,11 +944,11 @@ mutation ($adminId: ID!, $message: String!) {
 }
 ```
 
-- DeleteNotification:
+- AdminDeleteNotification:
 
 ```graphql
 mutation ($adminId: ID!, $notificationId: ID!) {
-  DeleteNotification(adminId: $adminId, notificationId: $notificationId) {
+  AdminDeleteNotification(adminId: $adminId, notificationId: $notificationId) {
     success
     message
     notificationId

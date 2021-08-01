@@ -146,6 +146,28 @@ module.exports = {
       throw e
     }
   },
+  DeleteNotification: async (_, { clientId, notificationId }, { auth }) => {
+    try {
+      const { clientId: client, isLoggedIn, message } = await auth
+      if (!isLoggedIn || client !== clientId) generateError(message)
+
+      const notificationExist = await Notification.findOne({
+        $and: [{ _id: notificationId }, { clientId }],
+      })
+      if (!notificationExist) generateError("The notification doesn't exist")
+      if (notificationExist.source === "ADMIN")
+        generateError("No access for deleting notification from Admin")
+
+      await Notification.deleteOne({ _id: notificationId })
+      return {
+        success: true,
+        message: "The notification was successfully deleted",
+        notificationId,
+      }
+    } catch (e) {
+      throw e
+    }
+  },
   ResetPassword: async (_, { token, newPassword, confirmPassword }) => {
     const tokenData = token.split("___")
     const client = await Client.findOne({ _id: tokenData[1] })

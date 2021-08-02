@@ -1,9 +1,11 @@
+const bcrypt = require("bcrypt")
 const Client = require("mongoose").model("Client")
 const Payment = require("mongoose").model("Payment")
 const Notification = require("mongoose").model("Notification")
 const ShortTermProduct = require("mongoose").model("ShortTermProduct")
+const Admin = require("mongoose").model("Admin")
 
-const { newDate } = require("../utils/constants")
+const { newDate, adminAccRecover } = require("../utils/constants")
 
 const traceClients = async () => {
   try {
@@ -80,4 +82,25 @@ const traceProducts = async () => {
   }
 }
 
-module.exports = { traceClients, traceProducts }
+const createAdmin = async () => {
+  try {
+    const { username, email, phone, gender, password } = adminAccRecover
+    const admin = await Admin.find()
+
+    if (admin.length === 0) {
+      const hashedPassword = await bcrypt.hash(password, 10)
+      await new Admin({
+        username,
+        email,
+        phone,
+        gender,
+        password: hashedPassword,
+      }).save()
+      console.log("🌎 Admin set successfully")
+    }
+  } catch (e) {
+    throw e
+  }
+}
+
+module.exports = { traceClients, traceProducts, createAdmin }

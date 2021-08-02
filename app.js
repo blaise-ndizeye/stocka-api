@@ -7,9 +7,16 @@ const Mutation = require("./graphql/resolvers/mutation")
 const Context = require("./graphql/context")
 const NestedQueries = require("./graphql/resolvers/query/nestedQueries")
 const connectDB = require("./utils/db")
-const { traceClients, traceProducts } = require("./helpers/traceModels")
+const {
+  traceClients,
+  traceProducts,
+  createAdmin,
+} = require("./helpers/traceModels")
 
 connectDB()
+traceClients()
+traceProducts()
+createAdmin()
 
 const server = new ApolloServer({
   typeDefs,
@@ -25,8 +32,6 @@ server
   .listen({ port: process.env.PORT || 4000 })
   .then(({ url }) => {
     console.log(`🚀 Server is ready at ${url}`)
-    traceClients()
-    traceProducts()
   })
   .catch((e) => {
     console.error(`Error occured: ${e}`)

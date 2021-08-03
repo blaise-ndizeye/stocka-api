@@ -21,7 +21,7 @@ module.exports = {
       pricePerUnit: product.pricePerUnit,
       description: product.description,
       dateOfEntry: product.dateOfEntry.toGMTString(),
-      dateOfExpry: product.dateOfExpry.toGMTString(),
+      dateOfExpry: product.dateOfExpry? product.dateOfExpry.toGMTString() : "No expry Date",
     }
   },
   productRecordReducer(record) {

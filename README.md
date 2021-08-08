@@ -27,7 +27,9 @@ It includes two graphql operations including `mutations, queries` and `Authoriza
 
 ###### `MONGO_URL`: the database url and it is recommended to be the MONGO DB Url and that one is an example of connecting to a local server
 
-###### `TOKEN_SECRET`: the string specifying the jwt secret and is a string of ypur choice
+###### `TOKEN_SECRET`: the string specifying the jwt secret and is a string of your choice but be different from the one for admin
+
+###### `ADMIN_SECRET`: the string specifying the jwt secret and is a string of your choice
 
 ###### `FORGOT_PASSWORD_TOKEN`: the string specifying the forgot password secret and can be a string of your choice
 

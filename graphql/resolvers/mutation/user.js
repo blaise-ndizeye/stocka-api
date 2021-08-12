@@ -78,6 +78,11 @@ module.exports = {
         confirmPassword: password,
       })
       if (error) generateError(error.details[0].message)
+      if (email !== clientExists.email) {
+        const emailExist = await Client.find({ email })
+        if (emailExist.length > 0)
+          generateError("Account with that email already exist")
+      }
 
       const passwordMatch = await bcrypt.compare(
         password,

@@ -24,12 +24,14 @@ module.exports = {
       if (error) generateError(error.details[0].message)
 
       const { buyingPrice, dateOfEntry, description } = productToRecord
+
       if (amount > productToRecord.amount)
         generateError("Amount being recorded exceeds the amount in the stock")
+
       const newRecord = await new ProductRecord({
         ...record,
         clientId,
-        buyingPrice,
+        buyingPrice: productToRecord.pricePerUnit * amount,
         dateOfEntry,
         description,
       }).save()
@@ -41,6 +43,9 @@ module.exports = {
         {
           $set: {
             amount: productToRecord.amount - amount,
+            buyingPrice:
+              productToRecord.buyingPrice -
+              productToRecord.pricePerUnit * amount,
           },
         }
       )

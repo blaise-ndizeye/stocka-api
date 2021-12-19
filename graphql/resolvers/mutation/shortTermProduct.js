@@ -116,11 +116,7 @@ module.exports = {
       const { clientId: client, isLoggedIn, message } = await auth
       if (!isLoggedIn || client !== clientId) generateError(message)
 
-      if (
-        !sellingPrice ||
-        typeof sellingPrice !== "number" ||
-        sellingPrice <= 0
-      )
+      if (!sellingPrice || typeof sellingPrice !== "number" || sellingPrice < 0)
         generateError("Enter a valid selling Price")
 
       const productExists = await ShortTermProduct.findOne({

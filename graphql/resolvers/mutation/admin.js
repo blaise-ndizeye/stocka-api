@@ -77,23 +77,25 @@ module.exports = {
       const { error } = notificationValidation({ message: notification })
       if (error) generateError(error.details[0].message)
 
-      const clients = await Client.find()
-      for (let i in clients) {
-        let clientObj = clients[i]
-        let notifications = await Notification.find({
-          $and: [
-            { source: "ADMIN" },
-            { message: notification },
-            { clientId: clientObj._id },
-          ],
-        })
-        if (notifications.length > 0) continue
-        await new Notification({
-          source: "ADMIN",
-          clientId: clientObj._id,
-          message: notification,
-        }).save()
-      }
+      const notificationExists = await Notification.find({
+        $and: [
+          {
+            source: "ADMIN",
+          },
+          { message: notification },
+          { destination: "ALL USERS" },
+        ],
+      })
+
+      if (notificationExists.length > 0)
+        generateError("The notification already exists")
+
+      await new Notification({
+        destination: "ALL USERS",
+        source: "ADMIN",
+        message: notification,
+      }).save()
+
       const adminObj = await Admin.findOne({ _id: adminId })
       return {
         success: true,
@@ -120,23 +122,21 @@ module.exports = {
           message: "There are no paid clients to notify",
           admin: adminReducer(adminObj),
         }
-      for (let i in paidPayments) {
-        let clientObjId = paidPayments[i].clientId
+      let notifications = await Notification.find({
+        $and: [
+          { source: "ADMIN" },
+          { message: notification },
+          { destination: "PAID USERS" },
+        ],
+      })
 
-        let notifications = await Notification.find({
-          $and: [
-            { source: "ADMIN" },
-            { message: notification },
-            { clientId: clientObjId },
-          ],
-        })
-        if (notifications.length > 0) continue
-        await new Notification({
-          source: "ADMIN",
-          clientId: clientObjId,
-          message: notification,
-        }).save()
-      }
+      if (notifications.length > 0) generateError("Notification already exists")
+
+      await new Notification({
+        source: "ADMIN",
+        destination: "PAID USERS",
+        message: notification,
+      }).save()
 
       return {
         success: true,
@@ -163,23 +163,22 @@ module.exports = {
           message: "There are no unpaid clients to notify",
           admin: adminReducer(adminObj),
         }
-      for (let i in unPaidPayments) {
-        let clientObjId = unPaidPayments[i].clientId
 
-        let notifications = await Notification.find({
-          $and: [
-            { source: "ADMIN" },
-            { message: notification },
-            { clientId: clientObjId },
-          ],
-        })
-        if (notifications.length > 0) continue
-        await new Notification({
-          source: "ADMIN",
-          clientId: clientObjId,
-          message: notification,
-        }).save()
-      }
+      let notifications = await Notification.find({
+        $and: [
+          { source: "ADMIN" },
+          { message: notification },
+          { destination: "UNPAID USERS" },
+        ],
+      })
+
+      if (notifications.length > 0) generateError("Notification already exists")
+
+      await new Notification({
+        source: "ADMIN",
+        destination: "UNPAID USERS",
+        message: notification,
+      }).save()
 
       return {
         success: true,
@@ -198,7 +197,9 @@ module.exports = {
     try {
       const { adminId: admin, isLoggedIn, message } = await secure
       if (!isLoggedIn || admin !== adminId) generateError(message)
+
       const adminObj = await Admin.findOne({ _id: adminId })
+
       const clientObj = await Client.findOne({ _id: clientId })
       if (!clientObj) generateError("Client doesn't exist")
 
@@ -206,13 +207,18 @@ module.exports = {
       if (error) generateError(error.details[0].message)
 
       let notificationExist = await Notification.find({
-        $and: [{ source: "ADMIN" }, { message: notification }, { clientId }],
+        $and: [
+          { source: "ADMIN" },
+          { message: notification },
+          { destination: clientId },
+        ],
       })
       if (notificationExist.length > 0)
-        generateError("The notification being sent already exists")
+        generateError("The notification already exists")
+
       await new Notification({
         source: "ADMIN",
-        clientId,
+        destination: clientId,
         message: notification,
       }).save()
 

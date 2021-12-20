@@ -157,7 +157,7 @@ module.exports = {
       if (!isLoggedIn || client !== clientId) generateError(message)
 
       const notificationExist = await Notification.findOne({
-        $and: [{ _id: notificationId }, { clientId }],
+        $and: [{ _id: notificationId }, { destination: clientId }],
       })
       if (!notificationExist) generateError("The notification doesn't exist")
       if (notificationExist.source === "ADMIN")

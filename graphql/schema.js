@@ -132,10 +132,16 @@ const typeDefs = gql`
     description: String
   }
 
+  type Destination {
+    destination: String!
+  }
+
+  union DestinationResult = Client | Destination
+
   type Notification {
     "The fields to be returned for the notification to the client"
     notificationId: ID!
-    client: Client!
+    destination: DestinationResult
     source: String!
     message: String!
     createdAt: String!
@@ -218,67 +224,83 @@ const typeDefs = gql`
       email: String!
       password: String!
     ): ClientLoginResponse!
+
     ShortTermProducts(
       "Get all short-term products sorted according to LIFO principle"
       clientId: ID!
     ): [ShortTermProduct!]!
+
     LongTermProducts(
       "Get all long-term products sorted according to LIFO principle"
       clientId: ID!
     ): [LongTermProduct!]!
+
     LongTermProductRecords(
       "Get all long-term products records"
       clientId: ID!
     ): [ProductRecord!]!
+
     ShortTermProductRecords(
       "Get all short-term product records"
       clientId: ID!
     ): [ProductRecord!]!
+
     Notifications(
       "Get all notifications sent to the client by the admin all types"
       clientId: ID!
     ): [Notification!]!
+
     PaymentStatus(
       "Get the status of payment of the user"
       clientId: ID!
     ): Payment!
+
     ForgotPassword(
       "Once the client forgot password he/she will send the email and send the link to the front-end which will get the data in parameters and send them to the server to update the password"
       email: String!
     ): ForgotPasswordResponse!
+
     LoginAdmin(
       "Login to the app as admin  with valid credentials"
       email: String!
       password: String!
     ): AdminLoginResponse!
+
     AllNotifications(
       "All notifications in the database and will be seen by admin"
       adminId: ID!
     ): [Notification!]!
+
     AllShortTermProducts(
       "All short-term products found in the database and will only be seen by admin"
       adminId: ID!
     ): [ShortTermProduct!]!
+
     AllLongTermProducts(
       "All long-term products found in the database and will only be seen by admin"
       adminId: ID!
     ): [LongTermProduct!]!
+
     AllShortTermProductRecords(
       "All short-term-product-records found in the database and will only be seen by admin"
       adminId: ID!
     ): [ProductRecord!]!
+
     AllLongTermProductRecords(
       "All short-term-product-records found in the database and will only be seen by admin"
       adminId: ID!
     ): [ProductRecord!]!
+
     AdminForgotPassword(
       "Once the admin forgot password he/she will send the email and send the link to the front-end which will get the data in parameters and send them to the server to update the password"
       email: String!
     ): ForgotPasswordResponse!
+
     AllPayments(
       "All payments made by the clients paying for the premium to use the app"
       adminId: ID!
     ): [Payment!]!
+
     AllPremiums(
       "⚠️ This query is both used by the admin and the client:=> 🚧  All premium costs to be chosen by the clients for using the app"
       adminId: ID

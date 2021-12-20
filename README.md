@@ -187,10 +187,16 @@ query ($clientId: ID!) {
     source
     message
     createdAt
-    client {
-      clientId
-      email
-      username
+    destination {
+      __typename
+      ... on Destination {
+        destination
+      }
+      ... on Client {
+        clientId
+        username
+        email
+      }
     }
   }
 }
@@ -810,10 +816,16 @@ query ($adminId: ID!) {
     message
     createdAt
     source
-    client {
-      clientId
-      email
-      username
+    destination {
+      __typename
+      ... on Destination {
+        destination
+      }
+      ... on Client {
+        clientId
+        email
+        username
+      }
     }
   }
 }

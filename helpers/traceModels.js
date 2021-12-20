@@ -10,12 +10,14 @@ const { newDate, adminAccRecover } = require("../utils/constants")
 const traceClients = async () => {
   try {
     let toDay = newDate(new Date(), 0)
+
     const clients = await Client.find().sort({ _id: -1 })
+
     for (let i in clients) {
       let clientId = clients[i]._id
       const payment = await Payment.findOne({ clientId })
 
-      if (payment.expryDate <= toDay) {
+      if (payment.expryDate < toDay) {
         await Payment.updateOne(
           { clientId },
           {
@@ -30,11 +32,15 @@ const traceClients = async () => {
           "Your premium duration has reached to end, Please pay for the next premium"
 
         const notificationExist = await Notification.findOne({
-          $and: [{ clientId }, { source: "Payment" }, { message: msg }],
+          $and: [
+            { destination: clientId },
+            { source: "Payment" },
+            { message: msg },
+          ],
         })
         if (!notificationExist) {
           await new Notification({
-            clientId,
+            destination: clientId,
             source: "Payment",
             message: msg,
           }).save()

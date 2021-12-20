@@ -30,12 +30,18 @@ module.exports = {
     longTermProductRecords: (parent) => longTermProductsRecords(parent),
   },
   Notification: {
-    client: (parent) => findClient(parent),
+    destination: (parent) => findClient(parent),
   },
   Payment: {
     client: (parent) => findClient(parent),
   },
   ActivationResponse: {
     client: (parent) => findClient(parent),
+  },
+  DestinationResult: {
+    __resolveType(obj, _, __) {
+      if (obj.clientId || obj.username) return "Client"
+      if (obj.destination) return "Destination"
+    },
   },
 }

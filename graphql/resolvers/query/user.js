@@ -75,7 +75,17 @@ module.exports = {
       const { clientId: client, isLoggedIn, message } = await auth
       if (!isLoggedIn || client !== clientId) generateError(message)
 
-      const notifications = await Notification.find({ clientId }).sort({
+      const paymentStatus = await Payment.findOne({ clientId })
+
+      const notifications = await Notification.find({
+        $or: [
+          { destination: clientId },
+          {
+            destination: paymentStatus.paid ? "PAID USERS" : "UNPAID USERS",
+          },
+          { destination: "ALL USERS" },
+        ],
+      }).sort({
         _id: -1,
       })
       return notifications.map((notification) =>

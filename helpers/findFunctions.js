@@ -18,9 +18,14 @@ module.exports = {
     return adminReducer(data)
   },
 
-  async client({ client }) {
-    const data = await Client.findOne({ _id: client })
-    if (!data) return {}
+  async client(param) {
+    if (!param.client)
+      return {
+        destination: param.destination,
+      }
+    const data = await Client.findOne({
+      _id: param.client,
+    })
     return clientReducer(data)
   },
 

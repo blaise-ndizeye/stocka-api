@@ -21,7 +21,9 @@ module.exports = {
       pricePerUnit: product.pricePerUnit,
       description: product.description,
       dateOfEntry: product.dateOfEntry.toGMTString(),
-      dateOfExpry: product.dateOfExpry? product.dateOfExpry.toGMTString() : "No expry Date",
+      dateOfExpry: product.dateOfExpry
+        ? product.dateOfExpry.toGMTString()
+        : "No expry Date",
     }
   },
   productRecordReducer(record) {
@@ -53,7 +55,7 @@ module.exports = {
     return {
       notificationId: notification._id,
       source: notification.source,
-      client: notification.clientId,
+      destination: notification.destination,
       message: notification.message,
       createdAt: notification.createdAt.toGMTString(),
     }

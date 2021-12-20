@@ -289,8 +289,6 @@ module.exports = {
 
       if (email === adminAccRecover.email)
         generateError("The email specified is not allowed")
-      if (adminExists.email === adminAccRecover.email)
-        generateError("Failed to update the account credentials")
       const { error } = adminValidation({
         name: username,
         phone,

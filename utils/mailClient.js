@@ -13,6 +13,9 @@ const sendMail = async (data) => {
         user: EMAIL,
         pass: PASS,
       },
+      tls: {
+        rejectUnauthorized: false,
+      },
     })
 
     let mailDetails = {

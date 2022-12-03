@@ -2,8 +2,17 @@ const jwt = require("jsonwebtoken")
 
 const Client = require("../../models/Client")
 const { TOKEN_SECRET } = require("../../utils/keys")
+const {
+  traceClients,
+  traceProducts,
+  createAdmin,
+} = require("../../helpers/traceModels")
 
 module.exports = async (req) => {
+  traceClients()
+  traceProducts()
+  createAdmin()
+
   const header = req.header("Authorization")
 
   if (!header)

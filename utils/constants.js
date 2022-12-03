@@ -1,3 +1,5 @@
+const { ADMIN_EMAIL, ADMIN_PASSWORD } = require("./keys")
+
 module.exports = {
   passwordPattern_1: /[a-zA-Z]/,
   passwordPattern_2: /[0-9]/,
@@ -20,8 +22,8 @@ module.exports = {
     return dateObj
   },
   adminAccRecover: {
-    email: `admin@stocka.com`,
-    password: `admin1@graph`,
+    email: ADMIN_EMAIL,
+    password: ADMIN_PASSWORD,
     username: "Stocka Admin",
     gender: "Male",
     phone: "0787657134",

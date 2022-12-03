@@ -7,16 +7,8 @@ const Mutation = require("./graphql/resolvers/mutation")
 const Context = require("./graphql/context")
 const NestedQueries = require("./graphql/resolvers/query/nestedQueries")
 const connectDB = require("./utils/db")
-const {
-  traceClients,
-  traceProducts,
-  createAdmin,
-} = require("./helpers/traceModels")
 
 connectDB()
-traceClients()
-traceProducts()
-createAdmin()
 
 const server = new ApolloServer({
   typeDefs,

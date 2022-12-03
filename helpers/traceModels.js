@@ -66,7 +66,7 @@ const traceProducts = async () => {
         const notificationExist = await Notification.findOne({
           $and: [
             {
-              clientId: product.clientId,
+              destination: product.clientId,
               source: "Short-term Product",
               message: msg,
             },
@@ -75,7 +75,7 @@ const traceProducts = async () => {
 
         if (!notificationExist) {
           await new Notification({
-            clientId: product.clientId,
+            destination: product.clientId,
             source: "Short-term Product",
             message: msg,
           }).save()

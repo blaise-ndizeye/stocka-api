@@ -41,7 +41,11 @@ It includes two graphql operations including `mutations, queries` and `Authoriza
 
 ###### `ADMIN_URL`: the root link pointing to the admin app in which the server is serving to be used when reseting the password for the user
 
-###### `NODE_TLS_REJECT_UNAUTHORIZED = "0"`: To avoid sign in certificate error
+###### `NODE_TLS_REJECT_UNAUTHORIZED = 0`: To avoid sign in certificate error
+
+###### `ADMIN_EMAIL = admin@example.com`: The admin email to be set at the start up of the server
+
+###### `ADMIN_PASSWORD = ********`: The admin password to be set at the start up of the server
 
 `After entering the above environment variables in the .env file then in the terminal in the current folder run:`
 
